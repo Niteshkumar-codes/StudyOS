@@ -1,0 +1,29 @@
+{
+  "name": "@studyos/api",
+  "version": "0.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "nodemon --watch src --ext ts --exec ts-node src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "lint": "eslint . --ext ts"
+  },
+  "dependencies": {
+    "express": "^4.19.0",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "dotenv": "^16.4.5",
+    "@studyos/types": "workspace:*",
+    "@studyos/utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.17",
+    "@types/node": "^20.12.0",
+    "typescript": "^5.0.0",
+    "ts-node": "^10.9.2",
+    "nodemon": "^3.1.0",
+    "@studyos/config": "workspace:*"
+  }
+}
