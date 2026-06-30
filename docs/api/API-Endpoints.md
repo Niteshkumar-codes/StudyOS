@@ -1,4 +1,5 @@
 # REST API Endpoints Specification
+
 ## StudyOS: Your Complete Preparation Operating System
 
 This document outlines the API contracts for frontend-backend communication, including payload schemas, return structures, and status codes.
@@ -8,6 +9,7 @@ This document outlines the API contracts for frontend-backend communication, inc
 ## 1. Authentication & Session APIs
 
 ### POST /api/auth/register
+
 - **Description:** Register a new user account.
 - **Authorization:** None (Public)
 - **Request Body:**
@@ -31,6 +33,7 @@ This document outlines the API contracts for frontend-backend communication, inc
   - `409 Conflict` (Email already registered)
 
 ### POST /api/auth/verify-otp
+
 - **Description:** Verify the email OTP to complete registration.
 - **Authorization:** Temporary Token (Bearer)
 - **Request Body:**
@@ -56,6 +59,7 @@ This document outlines the API contracts for frontend-backend communication, inc
   - `401 Unauthorized` (Invalid temp token)
 
 ### POST /api/auth/login
+
 - **Description:** Authenticate users with email & password.
 - **Authorization:** None (Public)
 - **Request Body:**
@@ -66,8 +70,8 @@ This document outlines the API contracts for frontend-backend communication, inc
   }
   ```
 - **Success Response:** `200 OK`
-  - *Cookie:* Sets HTTP-only `refreshToken`.
-  - *Body:*
+  - _Cookie:_ Sets HTTP-only `refreshToken`.
+  - _Body:_
     ```json
     {
       "success": true,
@@ -78,6 +82,7 @@ This document outlines the API contracts for frontend-backend communication, inc
   - `401 Unauthorized` (Incorrect email or password)
 
 ### POST /api/auth/refresh
+
 - **Description:** Rotate JWT access tokens using the refresh cookie.
 - **Authorization:** HTTP-only Refresh Token Cookie
 - **Request Body:** None
@@ -96,6 +101,7 @@ This document outlines the API contracts for frontend-backend communication, inc
 ## 2. Exam & Syllabus APIs
 
 ### GET /api/exams
+
 - **Description:** Get all configured exams for the authenticated user.
 - **Authorization:** Access Token (Bearer)
 - **Response:** `200 OK`
@@ -111,6 +117,7 @@ This document outlines the API contracts for frontend-backend communication, inc
   ```
 
 ### POST /api/exams
+
 - **Description:** Create a custom target exam.
 - **Authorization:** Access Token (Bearer)
 - **Request Body:**
@@ -130,6 +137,7 @@ This document outlines the API contracts for frontend-backend communication, inc
   ```
 
 ### GET /api/exams/:examId/syllabus
+
 - **Description:** Fetch the complete hierarchical syllabus (Subjects $\rightarrow$ Topics $\rightarrow$ Sub-topics).
 - **Authorization:** Access Token (Bearer)
 - **Response:** `200 OK`
@@ -157,6 +165,7 @@ This document outlines the API contracts for frontend-backend communication, inc
   ```
 
 ### PATCH /api/topics/:topicId/status
+
 - **Description:** Update the completion status of a specific sub-topic.
 - **Authorization:** Access Token (Bearer)
 - **Request Body:**
@@ -180,6 +189,7 @@ This document outlines the API contracts for frontend-backend communication, inc
 ## 3. Productivity & Timer APIs
 
 ### POST /api/study-logs
+
 - **Description:** Log a completed study session.
 - **Authorization:** Access Token (Bearer)
 - **Request Body:**
@@ -202,6 +212,7 @@ This document outlines the API contracts for frontend-backend communication, inc
   ```
 
 ### GET /api/planner/tasks
+
 - **Description:** Retrieve scheduled planner events for a date range.
 - **Authorization:** Access Token (Bearer)
 - **Query Params:** `startDate=2026-06-29&endDate=2026-07-05`
@@ -225,6 +236,7 @@ This document outlines the API contracts for frontend-backend communication, inc
 ## 4. Academic Review & AI APIs
 
 ### GET /api/revision/queue
+
 - **Description:** Fetch flashcards and topics due for review today.
 - **Authorization:** Access Token (Bearer)
 - **Response:** `200 OK`
@@ -240,6 +252,7 @@ This document outlines the API contracts for frontend-backend communication, inc
   ```
 
 ### POST /api/revision/log-review
+
 - **Description:** Record user answer feedback and update the card's SM-2 interval parameters.
 - **Authorization:** Access Token (Bearer)
 - **Request Body:**
@@ -259,6 +272,7 @@ This document outlines the API contracts for frontend-backend communication, inc
   ```
 
 ### POST /api/ai/chat
+
 - **Description:** Ask a concept question to the AI chatbot, leveraging vector contexts from the user's notes database.
 - **Authorization:** Access Token (Bearer)
 - **Request Body:**
@@ -285,6 +299,7 @@ This document outlines the API contracts for frontend-backend communication, inc
 ## 5. Mock Test & Reports APIs
 
 ### POST /api/mock-tests
+
 - **Description:** Log a mock exam score entry.
 - **Authorization:** Access Token (Bearer)
 - **Request Body:**

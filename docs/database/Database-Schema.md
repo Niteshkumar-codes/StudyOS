@@ -1,4 +1,5 @@
 # Database Schema
+
 ## StudyOS: Your Complete Preparation Operating System
 
 This document outlines the MongoDB collection designs, field descriptions, relational links, and validation constraints for StudyOS.
@@ -18,7 +19,7 @@ erDiagram
     USERS ||--o{ MOCK_TESTS : attempts
     USERS ||--o{ ACHIEVEMENTS : earns
     USERS ||--o{ SESSIONS : establishes
-    
+
     EXAMS ||--o{ SUBJECTS : contains
     SUBJECTS ||--o{ TOPICS : contains
     TOPICS ||--o{ STUDY_LOGS : references
@@ -31,7 +32,9 @@ erDiagram
 ## 2. Collection Definitions
 
 ### Users
+
 Stores account metadata, authentication status, and gamification profiles.
+
 ```json
 {
   "_id": "ObjectId",
@@ -50,7 +53,9 @@ Stores account metadata, authentication status, and gamification profiles.
 ```
 
 ### Exams
+
 Represents the test target parameters configured by a user.
+
 ```json
 {
   "_id": "ObjectId",
@@ -64,7 +69,9 @@ Represents the test target parameters configured by a user.
 ```
 
 ### Subjects
+
 Represents secondary chapters nested within an exam.
+
 ```json
 {
   "_id": "ObjectId",
@@ -77,7 +84,9 @@ Represents secondary chapters nested within an exam.
 ```
 
 ### Topics
+
 Granular elements of subjects detailing completion statuses.
+
 ```json
 {
   "_id": "ObjectId",
@@ -93,7 +102,9 @@ Granular elements of subjects detailing completion statuses.
 ```
 
 ### StudySessions
+
 Represents ongoing timer tracking states to guard session continuity.
+
 ```json
 {
   "_id": "ObjectId",
@@ -106,7 +117,9 @@ Represents ongoing timer tracking states to guard session continuity.
 ```
 
 ### StudyLogs
+
 Historical data of successfully completed focus timers.
+
 ```json
 {
   "_id": "ObjectId",
@@ -120,7 +133,9 @@ Historical data of successfully completed focus timers.
 ```
 
 ### PlannerTasks
+
 Items representing calendar blocks.
+
 ```json
 {
   "_id": "ObjectId",
@@ -136,7 +151,9 @@ Items representing calendar blocks.
 ```
 
 ### Notes
+
 Markdown files written by users.
+
 ```json
 {
   "_id": "ObjectId",
@@ -151,7 +168,9 @@ Markdown files written by users.
 ```
 
 ### Notifications
+
 Logs showing scheduled user alerts.
+
 ```json
 {
   "_id": "ObjectId",
@@ -164,7 +183,9 @@ Logs showing scheduled user alerts.
 ```
 
 ### RevisionQueue
+
 Tracks reviews linked to spaced repetition.
+
 ```json
 {
   "_id": "ObjectId",
@@ -179,7 +200,9 @@ Tracks reviews linked to spaced repetition.
 ```
 
 ### MockTests
+
 Logbook records tracking scoring metrics.
+
 ```json
 {
   "_id": "ObjectId",
@@ -201,7 +224,9 @@ Logbook records tracking scoring metrics.
 ```
 
 ### Reports
+
 Aggregated document summaries for downloads.
+
 ```json
 {
   "_id": "ObjectId",
@@ -216,7 +241,9 @@ Aggregated document summaries for downloads.
 ```
 
 ### Achievements
+
 Record logs tracking unlocked achievements.
+
 ```json
 {
   "_id": "ObjectId",
@@ -227,7 +254,9 @@ Record logs tracking unlocked achievements.
 ```
 
 ### Settings
+
 Preferences configurations.
+
 ```json
 {
   "_id": "ObjectId",
@@ -240,7 +269,9 @@ Preferences configurations.
 ```
 
 ### Sessions
+
 Token tracking maps preventing session hijackings.
+
 ```json
 {
   "_id": "ObjectId",
@@ -258,28 +289,29 @@ Token tracking maps preventing session hijackings.
 
 To maintain performance SLA levels below 200ms, the following indexes are required:
 
-| Collection | Index Key | Index Type | Purpose |
-| :--- | :--- | :--- | :--- |
-| **Users** | `email` | Unique Single Field | Speeds up credentials checks and auth routines. |
-| **Exams** | `userId` | Single Field | Speeds up dashboard workspace assembly queries. |
-| **Subjects** | `examId` | Single Field | Speeds up topic hierarchy calls. |
-| **Topics** | `subjectId` | Single Field | Speeds up topic retrieval. |
-| **StudyLogs** | `userId`, `timestamp` | Compound Index | Optimizes time log visual charts lookup. |
-| **PlannerTasks** | `userId`, `startTime` | Compound Index | Speeds up weekly planner grid loads. |
-| **RevisionQueue** | `userId`, `nextReviewDate` | Compound Index | Pulls active review list items due for study. |
-| **Sessions** | `refreshToken` | Single Field (Hashed) | Fast token refresh queries. |
-| **Sessions** | `expiresAt` | Single TTL Index | Automatically deletes expired session records. |
+| Collection        | Index Key                  | Index Type            | Purpose                                         |
+| :---------------- | :------------------------- | :-------------------- | :---------------------------------------------- |
+| **Users**         | `email`                    | Unique Single Field   | Speeds up credentials checks and auth routines. |
+| **Exams**         | `userId`                   | Single Field          | Speeds up dashboard workspace assembly queries. |
+| **Subjects**      | `examId`                   | Single Field          | Speeds up topic hierarchy calls.                |
+| **Topics**        | `subjectId`                | Single Field          | Speeds up topic retrieval.                      |
+| **StudyLogs**     | `userId`, `timestamp`      | Compound Index        | Optimizes time log visual charts lookup.        |
+| **PlannerTasks**  | `userId`, `startTime`      | Compound Index        | Speeds up weekly planner grid loads.            |
+| **RevisionQueue** | `userId`, `nextReviewDate` | Compound Index        | Pulls active review list items due for study.   |
+| **Sessions**      | `refreshToken`             | Single Field (Hashed) | Fast token refresh queries.                     |
+| **Sessions**      | `expiresAt`                | Single TTL Index      | Automatically deletes expired session records.  |
 
 ---
 
 ## 4. Schema Validations (MongoDB JSON Schema)
 
 ### Users Collection Schema Validation
+
 ```json
 {
   "$jsonSchema": {
     "bsonType": "object",
-    "required": [ "name", "email", "passwordHash" ],
+    "required": ["name", "email", "passwordHash"],
     "properties": {
       "name": {
         "bsonType": "string",
@@ -301,11 +333,12 @@ To maintain performance SLA levels below 200ms, the following indexes are requir
 ```
 
 ### StudyLogs Collection Schema Validation
+
 ```json
 {
   "$jsonSchema": {
     "bsonType": "object",
-    "required": [ "userId", "topicId", "durationSeconds", "focusRating" ],
+    "required": ["userId", "topicId", "durationSeconds", "focusRating"],
     "properties": {
       "userId": { "bsonType": "objectId" },
       "topicId": { "bsonType": "objectId" },

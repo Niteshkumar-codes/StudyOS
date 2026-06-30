@@ -1,4 +1,5 @@
 # System Architecture & Technical Specifications
+
 ## StudyOS: Your Complete Preparation Operating System
 
 This document outlines the architectural blueprints, security protocols, performance optimizations, accessibility configurations, and mobile app roadmap.
@@ -20,6 +21,7 @@ graph TD
 ```
 
 ### Component Details
+
 - **Frontend Layer:** Single Page Application (SPA) built using React, TypeScript, and Vite. Static assets are delivered globally via Vercel's CDN.
 - **Backend API Layer:** Stateless Express.js application running inside Docker containers on AWS ECS/Render, scaling horizontally behind a load balancer.
 - **Cache Layer:** Redis cluster managing session blacklists, verification OTP states, and database query cache blocks.
@@ -30,15 +32,18 @@ graph TD
 ## 2. Security Design (Section 10)
 
 ### Token & Session Lifecycle Management
+
 - **Access Tokens:** Short-lived JWTs (15-minute expiry) containing user roles and ID signatures. Passed in standard `Authorization: Bearer` headers.
 - **Refresh Tokens:** Long-lived JWTs (30-day expiry) stored in secure, HTTP-only, SameSite=Strict cookies. Used to issue new access tokens upon expiry.
 - **Token Blacklisting:** Revoked refresh tokens (upon user logout or session termination) are cached in Redis with a TTL matching the token's remaining lifespan.
 
 ### Registration & Login Verification
+
 - **Email OTP:** Registration triggers a 6-digit cryptographic random OTP sent via SMTP. The hashed OTP is cached in Redis with a 5-minute expiration window.
 - **SSO Authentication:** Secure OAuth 2.0 flow using Google Cloud services. User profiles are verified using Google's public key certificates.
 
 ### API & Middleware Protections
+
 - **Rate Limiting:** Express middleware limits incoming IP requests to 100 queries per minute. Authentication paths are restricted to 5 attempts per 10 minutes to prevent brute-force attacks.
 - **Helmet Headers:** Integrated to set secure HTTP response headers:
   - Content Security Policy (CSP) blocking unauthorized script injections.
@@ -52,10 +57,12 @@ graph TD
 ## 3. Performance & Scaling Strategies (Section 11)
 
 ### Caching Layers
+
 - **Database Query Caching:** Redis caches high-read, low-write queries (e.g., standard syllabi templates, user settings configurations) using a Cache-Aside strategy (1-hour TTL).
 - **HTTP Caching:** Static assets are served with long-term cache headers (`Cache-Control: public, max-age=31536000`), automatically invalidated via build hashing.
 
 ### Code & Asset Optimizations
+
 - **Lazy Loading & Code Splitting:** Built using React's `lazy` and `Suspense` frameworks. Route-based code splitting ensures dashboard assets are loaded separately from initial landing page components:
   ```typescript
   const NotesWorkspace = lazy(() => import('@/pages/notes-workspace'));
@@ -68,13 +75,12 @@ graph TD
 ## 4. Accessibility Implementations (Section 12)
 
 ### WCAG 2.1 AA Compliance Checklist
+
 - **Color Contrast:** Foreground text-to-background contrast ratios maintained at $\ge 4.5:1$ for normal text and $\ge 3.0:1$ for large headings.
 - **Keyboard Navigation:** All interactive dashboard controls (timer buttons, calendar slots, notes dropdowns) are navigable using standard `Tab`, `Space`, and `Enter` sequences. Focus states are visually highlighted.
 - **ARIA Attributes:** Semantic HTML elements enriched with dynamic labels:
   ```html
-  <button aria-label="Start Pomodoro focus timer" aria-live="polite">
-    Start Timer
-  </button>
+  <button aria-label="Start Pomodoro focus timer" aria-live="polite">Start Timer</button>
   ```
 - **Screen Reader Support:** Document structures utilize strict landmark tags (`<header>`, `<nav>`, `<main>`, `<footer>`) with descriptive page-level headers (`<h1>` to `<h6>`).
 

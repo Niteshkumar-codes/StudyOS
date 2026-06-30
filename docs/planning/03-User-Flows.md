@@ -1,4 +1,5 @@
 # User Flows
+
 ## StudyOS: Your Complete Preparation Operating System
 
 This document outlines the visual and logic flows for the primary user paths within StudyOS.
@@ -8,6 +9,7 @@ This document outlines the visual and logic flows for the primary user paths wit
 ## 1. Authentication User Flows
 
 ### Landing Page & Register Flow
+
 ```mermaid
 graph TD
     A[Visitor on Landing Page] --> B{Has Account?}
@@ -22,6 +24,7 @@ graph TD
 ```
 
 ### Email OTP Verification Flow
+
 ```mermaid
 graph TD
     A[OTP Screen Loaded] --> B[Retrieve OTP from Email]
@@ -34,6 +37,7 @@ graph TD
 ```
 
 ### Google Login Flow
+
 ```mermaid
 graph TD
     A[Click 'Continue with Google'] --> B[Redirect to Google OAuth Consent Page]
@@ -53,6 +57,7 @@ graph TD
 ## 2. Onboarding & Core Syllabus Management
 
 ### Create Exam & Syllabus Selection Flow
+
 ```mermaid
 graph TD
     A[First-time User Login] --> B[Redirect to Welcoming Onboarding Dialog]
@@ -67,6 +72,7 @@ graph TD
 ```
 
 ### Subject & Topic Configuration Flow
+
 ```mermaid
 graph TD
     A[User on Exam Syllabus Screen] --> B[Click 'Add Subject' or 'Add Topic']
@@ -83,6 +89,7 @@ graph TD
 ## 3. Core Productivity & Log Loops
 
 ### Daily Planner Flow
+
 ```mermaid
 graph TD
     A[User Opens Daily Planner] --> B[View calendar layout & unscheduled items list]
@@ -94,6 +101,7 @@ graph TD
 ```
 
 ### Study Timer Focus Loop
+
 ```mermaid
 graph TD
     A[User Launches Study Timer] --> B[Configure Duration: Pomodoro or Stopwatch]
@@ -113,6 +121,7 @@ graph TD
 ## 4. Academic Review & Analytics Loops
 
 ### Notes & Flashcards Creation Flow
+
 ```mermaid
 graph TD
     A[User Opens Notes Workspace] --> B[Select Subject -> Create New Markdown Note]
@@ -124,6 +133,7 @@ graph TD
 ```
 
 ### Mock Test & Error Log Flow
+
 ```mermaid
 graph TD
     A[Navigate to Mock Test Panel] --> B[Select 'Log Mock Test']
@@ -134,6 +144,7 @@ graph TD
 ```
 
 ### Reports & Analytics Flow
+
 ```mermaid
 graph TD
     A[User Opens Reports Dashboard] --> B[View Mastery Matrix, Focus charts, and Completion progress]

@@ -1,4 +1,5 @@
 # Navigation Map
+
 ## StudyOS: Your Complete Preparation Operating System
 
 This document outlines the navigation architecture, layout frameworks, and responsive transition mappings for StudyOS.
@@ -27,6 +28,7 @@ This document outlines the navigation architecture, layout frameworks, and respo
 ## 2. Navigation Components Specifications
 
 ### Sidebar (Desktop Navigation)
+
 - **Position:** Fixed left sidebar panel (width: $240\text{px}$). Collapses to a slim icon-only sidebar (width: $72\text{px}$) on medium viewport scales ($1024\text{px}$ to $1200\text{px}$).
 - **Navigation Links Groupings:**
   - **Section 1: General**
@@ -44,6 +46,7 @@ This document outlines the navigation architecture, layout frameworks, and respo
     - `Settings` (Icon: `Settings`, Route: `/settings`)
 
 ### Topbar (Global Context Controls)
+
 - **Breadcrumbs:** Left-aligned link sequence displaying nested pathways (e.g., `Syllabus` $\rightarrow$ `Algorithms` $\rightarrow$ `Graph Search`).
 - **Context Dropdown:** Allows switching between active exam profiles (e.g., `GATE 2027` vs. `Semester 7`).
 - **Streak Status Widget:** Flame counter linking to achievements page when clicked.
@@ -54,6 +57,7 @@ This document outlines the navigation architecture, layout frameworks, and respo
   - Logout (Triggers session termination API)
 
 ### Mobile Navigation Layout (Viewports $< 1024\text{px}$)
+
 - **Desktop Sidebar:** Hidden. Replaced by a responsive bottom tab bar and a collapsible slide-out hamburger drawer.
 - **Bottom Navigation Tabs (Primary Paths):**
   - Tab 1: `Home` (`/dashboard`)
@@ -69,11 +73,11 @@ This document outlines the navigation architecture, layout frameworks, and respo
 
 The mapping below outlines the expected navigation pathways between screens:
 
-| Origin Screen | Navigation Action | Target Screen | UI Element Trigger |
-| :--- | :--- | :--- | :--- |
-| **S-102 Login** | Successful Login | **S-301 Dashboard** | "Submit" button / OAuth callback |
-| **S-301 Dashboard** | Click active countdown | **S-303 Focus Timer** | Countdown widget |
-| **S-301 Dashboard** | Click review warning | **S-402 Revision Deck** | "Revise Now" alert button |
-| **S-401 Notes** | Convert text to card | **S-402 Revision Deck** | Note editor context menu |
-| **S-403 Mock Tests** | Click diagnostic check | **S-404 Analytics** | "Analyze Error Log" link |
-| **S-501 Settings** | Select security tab | **S-502 Security** | Segmented page tab bar |
+| Origin Screen        | Navigation Action      | Target Screen           | UI Element Trigger               |
+| :------------------- | :--------------------- | :---------------------- | :------------------------------- |
+| **S-102 Login**      | Successful Login       | **S-301 Dashboard**     | "Submit" button / OAuth callback |
+| **S-301 Dashboard**  | Click active countdown | **S-303 Focus Timer**   | Countdown widget                 |
+| **S-301 Dashboard**  | Click review warning   | **S-402 Revision Deck** | "Revise Now" alert button        |
+| **S-401 Notes**      | Convert text to card   | **S-402 Revision Deck** | Note editor context menu         |
+| **S-403 Mock Tests** | Click diagnostic check | **S-404 Analytics**     | "Analyze Error Log" link         |
+| **S-501 Settings**   | Select security tab    | **S-502 Security**      | Segmented page tab bar           |

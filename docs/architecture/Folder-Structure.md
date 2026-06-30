@@ -1,4 +1,5 @@
 # Project Folder Structure
+
 ## StudyOS: Your Complete Preparation Operating System
 
 This document outlines the production-ready monorepo layout, detailing components, configuration targets, and resource directories.
@@ -25,6 +26,7 @@ studyos-workspace/
 ## 2. Directory Details
 
 ### Frontend Application (`apps/frontend/`)
+
 ```
 apps/frontend/
 ├── public/                   # Static assets (favicons, robots.txt)
@@ -50,6 +52,7 @@ apps/frontend/
 ```
 
 ### Backend Application (`apps/backend/`)
+
 ```
 apps/backend/
 ├── src/
@@ -67,6 +70,7 @@ apps/backend/
 ```
 
 ### Shared Package (`packages/shared/`)
+
 ```
 packages/shared/
 ├── src/
@@ -78,6 +82,7 @@ packages/shared/
 ```
 
 ### Assets & Docs Directories
+
 - `assets/`: Contains global branding vectors, design assets, and marketing layouts.
 - `docs/`: Structure matches the planning configurations:
   ```

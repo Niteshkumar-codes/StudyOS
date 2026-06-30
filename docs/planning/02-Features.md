@@ -1,4 +1,5 @@
 # Feature Specification Document
+
 ## StudyOS: Your Complete Preparation Operating System
 
 This document outlines the granular feature specifications for StudyOS, categorized across 20 core areas.
@@ -8,6 +9,7 @@ This document outlines the granular feature specifications for StudyOS, categori
 ## 1. Authentication
 
 ### Feature 1.1: Local Auth (Email/Password)
+
 - **Priority:** P0
 - **User Value:** Allows users to create a private account and securely access their study logs, planner, and notes from any device.
 - **Dependencies:** Database user schema, email service provider (SMTP/SendGrid) for confirmation emails.
@@ -17,6 +19,7 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-3:** User can log in with valid credentials and receive a JWT. Invalid logins return a standardized error message.
 
 ### Feature 1.2: OAuth 2.0 (Google & GitHub SSO)
+
 - **Priority:** P0
 - **User Value:** Provides a frictionless signup/login flow using existing Google or GitHub accounts.
 - **Dependencies:** Google Cloud Console credentials, GitHub Developer settings, OAuth client library.
@@ -26,6 +29,7 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-3:** Auth tokens are safely processed and stored in secure cookies.
 
 ### Feature 1.3: Multi-Factor Authentication (MFA)
+
 - **Priority:** P1
 - **User Value:** Adds a second security layer, protecting study metrics and notes from unauthorized access.
 - **Dependencies:** TOTP library, User Settings page.
@@ -39,6 +43,7 @@ This document outlines the granular feature specifications for StudyOS, categori
 ## 2. Dashboard
 
 ### Feature 2.1: Unified Progress & Streaks Widget
+
 - **Priority:** P0
 - **User Value:** Shows progress toward the target exam and displays active study streaks to build consistency.
 - **Dependencies:** Exam Management, Study Logs database.
@@ -48,6 +53,7 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-3:** The streak counter increments daily or resets if a day is missed without a streak freeze active.
 
 ### Feature 2.2: Focus Tasks Widget
+
 - **Priority:** P0
 - **User Value:** Displays the top three high-priority tasks due today, helping users avoid decision fatigue.
 - **Dependencies:** Daily Planner database schema.
@@ -57,6 +63,7 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-3:** Checked tasks instantly update the database state and play a subtle success chime.
 
 ### Feature 2.3: Quick Timer Widget
+
 - **Priority:** P0
 - **User Value:** Allows quick access to start a focus session directly from the home screen.
 - **Dependencies:** Study Timer system.
@@ -70,6 +77,7 @@ This document outlines the granular feature specifications for StudyOS, categori
 ## 3. Exam Management
 
 ### Feature 3.1: Pre-Configured Exam Selection
+
 - **Priority:** P0
 - **User Value:** Saves setup time by letting aspirants load pre-built syllabi for exams like GATE, UPSC, CAT, etc.
 - **Dependencies:** Seeded database containing official exam syllabi.
@@ -78,6 +86,7 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-2:** Selecting an exam automatically imports its full subject, topic, and sub-topic hierarchy into the user's workspace.
 
 ### Feature 3.2: Custom Exam Builder
+
 - **Priority:** P0
 - **User Value:** Allows students of niche or regional exams to structure custom templates matching their targets.
 - **Dependencies:** Hierarchical subject/topic creation forms.
@@ -87,18 +96,20 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-3:** The custom exam is saved in the user's personal database registry.
 
 ### Feature 3.3: Multi-Exam Coexistence
+
 - **Priority:** P1
 - **User Value:** Allows students to study for placement prep and semester exams concurrently without mixing records.
 - **Dependencies:** Workspace isolation layer in database queries.
 - **Acceptance Criteria:**
   - **AC-1:** Dashboard header contains a dropdown selector to toggle between active exams.
-  - **AC-2:** Switching the exam context refreshes the syllabus tracker, planner, and analytics to show metrics *only* for the active exam.
+  - **AC-2:** Switching the exam context refreshes the syllabus tracker, planner, and analytics to show metrics _only_ for the active exam.
 
 ---
 
 ## 4. Subject Management
 
 ### Feature 4.1: Subject Weightage Mapping
+
 - **Priority:** P0
 - **User Value:** Helps users allocate study hours based on the relative importance of each subject in the exam.
 - **Dependencies:** Exam Management, Syllabus Tracking.
@@ -108,6 +119,7 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-3:** Weightages are factored into the global syllabus progress calculations.
 
 ### Feature 4.2: Visual Color Coding
+
 - **Priority:** P0
 - **User Value:** Makes the interface visually distinct, color-coding study tasks, charts, and logs by subject.
 - **Dependencies:** Subject schema UI colors.
@@ -120,6 +132,7 @@ This document outlines the granular feature specifications for StudyOS, categori
 ## 5. Topic Management
 
 ### Feature 5.1: Hierarchical Topic Tree
+
 - **Priority:** P0
 - **User Value:** Breaks subjects down into manageable chapters and sub-topics, preventing cognitive overload.
 - **Dependencies:** Subject Management.
@@ -129,6 +142,7 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-3:** Children states automatically bubble up to affect the parent topic status.
 
 ### Feature 5.2: Difficulty & Importance Tagging
+
 - **Priority:** P1
 - **User Value:** Prioritizes topics that are high-yield and highly difficult for early intervention.
 - **Dependencies:** Topic Tree.
@@ -141,6 +155,7 @@ This document outlines the granular feature specifications for StudyOS, categori
 ## 6. Syllabus Tracking
 
 ### Feature 6.1: Progress & Forecast Analytics
+
 - **Priority:** P0
 - **User Value:** Offers realistic projections of completion dates based on current velocity, managing expectations.
 - **Dependencies:** Topic Management states, Study Logs.
@@ -149,6 +164,7 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-2:** Displays a "Completion Forecast" indicating the estimated date the syllabus will hit $100\%$ based on the average weekly study logs velocity.
 
 ### Feature 6.2: Backlog & Delay Flags
+
 - **Priority:** P1
 - **User Value:** Alerts students to topics they have been stuck on for too long.
 - **Dependencies:** Topic state timestamp history.
@@ -161,6 +177,7 @@ This document outlines the granular feature specifications for StudyOS, categori
 ## 7. Daily Planner
 
 ### Feature 7.1: Interactive Time-Blocking Calendar
+
 - **Priority:** P0
 - **User Value:** Helps users plan their days hour-by-hour to ensure structured study routines.
 - **Dependencies:** Task schema, Frontend UI calendar component.
@@ -170,6 +187,7 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-3:** Active study blocks change color to match the associated subject.
 
 ### Feature 7.2: Drag-and-Drop Task Scheduling
+
 - **Priority:** P1
 - **User Value:** Saves planning time by letting users drag unscheduled topics onto calendar slots.
 - **Dependencies:** Topic Management, Calendar.
@@ -179,6 +197,7 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-3:** On drop, a calendar event is created, and the task status is updated in the database.
 
 ### Feature 7.3: External Calendar Integration
+
 - **Priority:** P2
 - **User Value:** Prevents scheduling clashes by overlaying personal calendar appointments onto the study calendar.
 - **Dependencies:** Google Calendar API, iCal feed parsers.
@@ -191,6 +210,7 @@ This document outlines the granular feature specifications for StudyOS, categori
 ## 8. Study Timer
 
 ### Feature 8.1: Integrated Pomodoro Timer
+
 - **Priority:** P0
 - **User Value:** Boosts focus using structured intervals, minimizing distraction during study blocks.
 - **Dependencies:** Front-end timer state, Web audio API.
@@ -200,6 +220,7 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-3:** Timer state persists across page refreshes during an active session using localStorage/sessionStorage.
 
 ### Feature 8.2: Stopwatch Mode
+
 - **Priority:** P0
 - **User Value:** Caters to long-form focus sessions (e.g., writing full-length mock tests).
 - **Dependencies:** Timer module.
@@ -209,6 +230,7 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-3:** Users can pause/resume and stop the timer, triggering the Study Log modal.
 
 ### Feature 8.3: Strict Mode & Tab Blocklist
+
 - **Priority:** P1
 - **User Value:** Minimizes digital distraction by enforcing page focus during active study blocks.
 - **Dependencies:** Page visibility API, Browser focus handlers.
@@ -222,6 +244,7 @@ This document outlines the granular feature specifications for StudyOS, categori
 ## 9. Study Logs
 
 ### Feature 9.1: Automatic Focus Logging
+
 - **Priority:** P0
 - **User Value:** Automatically tracks studied hours without requiring manual spreadsheet entry.
 - **Dependencies:** Study Timer, Topic Tree database.
@@ -231,6 +254,7 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-3:** Study logs immediately update weekly study chart progress.
 
 ### Feature 9.2: Retroactive Manual Logging
+
 - **Priority:** P1
 - **User Value:** Allows tracking of library sessions, offline coaching classes, or physical reading.
 - **Dependencies:** Logs database.
@@ -244,6 +268,7 @@ This document outlines the granular feature specifications for StudyOS, categori
 ## 10. Notes
 
 ### Feature 10.1: Rich Markdown & Code Editor
+
 - **Priority:** P1
 - **User Value:** Provides a flexible workspace to write summaries, code snippets, and math equations without external apps.
 - **Dependencies:** Markdown parser, LaTeX engine (KaTeX/MathJax), code formatting modules.
@@ -253,6 +278,7 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-3:** Code blocks display syntax highlighting for programming languages based on markdown identifiers (e.g., ` ```python `).
 
 ### Feature 10.2: Wiki-Style Interlinking
+
 - **Priority:** P1
 - **User Value:** Allows creating a personalized knowledge network by linking topics together.
 - **Dependencies:** Notes database parser.
@@ -262,6 +288,7 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-3:** Clicking the link in read-only mode navigates the user directly to the targeted note or topic overview page.
 
 ### Feature 10.3: Text-to-Flashcard Direct Promotion
+
 - **Priority:** P2
 - **User Value:** Speeds up revision card creation directly from study notes.
 - **Dependencies:** Notes editor, Flashcard database schema.
@@ -275,6 +302,7 @@ This document outlines the granular feature specifications for StudyOS, categori
 ## 11. Notification Center
 
 ### Feature 11.1: In-App Alerts
+
 - **Priority:** P0
 - **User Value:** Informs the user of system events and immediate planning tasks within the app.
 - **Dependencies:** Notifications database schema.
@@ -284,6 +312,7 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-3:** Users can click "Mark all as read" to clear indicators.
 
 ### Feature 11.2: Daily Agenda Email
+
 - **Priority:** P1
 - **User Value:** Sends a morning snapshot of the scheduled day directly to the user's inbox to encourage daily alignment.
 - **Dependencies:** Cron scheduler, Email template engines, SendGrid/SMTP.
@@ -293,6 +322,7 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-3:** Dispatches HTML email. Users can opt out of this email in Settings.
 
 ### Feature 11.3: Browser Push notifications
+
 - **Priority:** P1
 - **User Value:** Triggers desktop/mobile browser alerts when timers finish or tasks are due.
 - **Dependencies:** Web Push API, Service Workers.
@@ -306,6 +336,7 @@ This document outlines the granular feature specifications for StudyOS, categori
 ## 12. Revision Planner
 
 ### Feature 12.1: Spaced Repetition Engine (SM-2 adaptation)
+
 - **Priority:** P0
 - **User Value:** Retains learned information scientifically by scheduling reviews just before memory fades.
 - **Dependencies:** Flashcard database, Cron schedule logic.
@@ -315,6 +346,7 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-3:** Revision tasks automatically update and surface in the dashboard "Revision Queue" on their due dates.
 
 ### Feature 12.2: Flashcard Review Interface
+
 - **Priority:** P1
 - **User Value:** Provides a clean interface to test recall quickly.
 - **Dependencies:** Revision Planner engine.
@@ -328,6 +360,7 @@ This document outlines the granular feature specifications for StudyOS, categori
 ## 13. Mock Tests
 
 ### Feature 13.1: Score Tracker & Diagnostic Logger
+
 - **Priority:** P1
 - **User Value:** Monitors performance trajectories on full-length mock exams.
 - **Dependencies:** Exam Management.
@@ -337,6 +370,7 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-3:** Log is saved, updating the Mock Test analytics trend line.
 
 ### Feature 13.2: Sectional Analytics & Gap Analysis
+
 - **Priority:** P1
 - **User Value:** Identifies which specific test sections (e.g., Verbal vs. Quant) pull down overall scores.
 - **Dependencies:** Score Tracker database schema.
@@ -346,6 +380,7 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-3:** Pinpoints sections performing below average relative to target requirements.
 
 ### Feature 13.3: Screenshot Error Logbook
+
 - **Priority:** P2
 - **User Value:** Collects all incorrect test questions in one searchable place for targeted correction.
 - **Dependencies:** Cloud storage bucket integration (AWS S3 or Cloudinary).
@@ -359,6 +394,7 @@ This document outlines the granular feature specifications for StudyOS, categori
 ## 14. Analytics
 
 ### Feature 14.1: Study Time Distribution Charts
+
 - **Priority:** P1
 - **User Value:** Visually proves if students are spending time on the right subjects.
 - **Dependencies:** Study Logs database, Chart JS / D3 library.
@@ -368,6 +404,7 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-3:** Hovering over charts displays tooltips showing exact hours and minutes logged.
 
 ### Feature 14.2: Subject Mastery Matrix
+
 - **Priority:** P1
 - **User Value:** Prevents students from focusing exclusively on comfortable subjects instead of weak areas.
 - **Dependencies:** Mock Test scores, Study logs data.
@@ -383,6 +420,7 @@ This document outlines the granular feature specifications for StudyOS, categori
 ## 15. Reports
 
 ### Feature 15.1: Weekly Progress Review
+
 - **Priority:** P2
 - **User Value:** Summarizes performance trends to help students evaluate productivity at the end of each week.
 - **Dependencies:** Analytics, Email service templates.
@@ -392,6 +430,7 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-3:** Allows toggling subscription preferences.
 
 ### Feature 15.2: Exportable Performance PDFs
+
 - **Priority:** P2
 - **User Value:** Generates reports that can be printed or shared with teachers, parents, or academic advisors.
 - **Dependencies:** PDF generation library (e.g., pdfkit, puppeteer-pdf).
@@ -405,6 +444,7 @@ This document outlines the granular feature specifications for StudyOS, categori
 ## 16. AI Assistant
 
 ### Feature 16.1: RAG-based Note Doubt Solver
+
 - **Priority:** P1
 - **User Value:** Acts as a 24/7 personal tutor that answers conceptual questions using the student's own verified notes.
 - **Dependencies:** Vector database integration (Pinecone/pgvector), LLM API (Gemini/OpenAI), RAG pipeline.
@@ -414,6 +454,7 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-3:** Highlights and links note segments used as source context.
 
 ### Feature 16.2: AI Study Schedule Planner
+
 - **Priority:** P1
 - **User Value:** Creates an optimized schedule dynamically, adjusting to the student's available hours.
 - **Dependencies:** Topic tree, Exam dates, Daily Planner calendar schema.
@@ -423,6 +464,7 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-3:** Clicking "Apply Schedule" maps study tasks to the user's planner calendar automatically.
 
 ### Feature 16.3: AI-Generated Flashcards
+
 - **Priority:** P2
 - **User Value:** Speeds up revision preparation by using AI to generate high-quality question-answer decks automatically.
 - **Dependencies:** LLM API, Notes database.
@@ -436,6 +478,7 @@ This document outlines the granular feature specifications for StudyOS, categori
 ## 17. Achievements
 
 ### Feature 17.1: XP & Level-Up Gamification
+
 - **Priority:** P2
 - **User Value:** Keeps students motivated during long, monotonous prep cycles by adding game-like progression.
 - **Dependencies:** User Profile schema.
@@ -448,6 +491,7 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-3:** Levels and XP are displayed on the top profile dashboard header.
 
 ### Feature 17.2: Milestone Badges
+
 - **Priority:** P2
 - **User Value:** Celebrates major study milestones, creating moments of accomplishment.
 - **Dependencies:** Achievements DB tables.
@@ -461,6 +505,7 @@ This document outlines the granular feature specifications for StudyOS, categori
 ## 18. User Profile
 
 ### Feature 18.1: Profile Customization
+
 - **Priority:** P0
 - **User Value:** Allows users to personalize their account details and manage their login identities.
 - **Dependencies:** Authentication, Database User table.
@@ -470,6 +515,7 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-3:** Validation prevents updating with an invalid email format or blank name fields.
 
 ### Feature 18.2: Target Settings & Daily Study Goals
+
 - **Priority:** P0
 - **User Value:** Sets targets that guide calculations for velocity charts and progress warnings.
 - **Dependencies:** Profile database schema.
@@ -483,6 +529,7 @@ This document outlines the granular feature specifications for StudyOS, categori
 ## 19. Settings
 
 ### Feature 19.1: Application Preferences & Theme Switcher
+
 - **Priority:** P0
 - **User Value:** Minimizes eye strain during late-night study sessions by providing dark mode preferences.
 - **Dependencies:** Front-end layout CSS variables.
@@ -492,6 +539,7 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-3:** Preferences are saved in database settings and sync across devices.
 
 ### Feature 19.2: Data Portability (Import/Export)
+
 - **Priority:** P1
 - **User Value:** Ensures users own their study logs and notes, preventing vendor lock-in.
 - **Dependencies:** JSON/CSV serializer, file generation modules.
@@ -505,6 +553,7 @@ This document outlines the granular feature specifications for StudyOS, categori
 ## 20. Security
 
 ### Feature 20.1: JWT Security & Active Session Manager
+
 - **Priority:** P0
 - **User Value:** Secures private records by monitoring active account access locations.
 - **Dependencies:** Redis/Session store, geolocation IP lookup.
@@ -514,6 +563,7 @@ This document outlines the granular feature specifications for StudyOS, categori
   - **AC-3:** User can click "Log out from this device" or "Terminate all sessions", invalidating tokens immediately.
 
 ### Feature 20.2: Rate Limiting & Input Sanitization
+
 - **Priority:** P0
 - **User Value:** Protects the stability and performance of the app by blocking spam and security exploits.
 - **Dependencies:** Middleware configurations.
@@ -541,7 +591,9 @@ gantt
 ```
 
 ### Phase 1 Features (Launch Target: Month 3)
-*Focus: Foundation, Auth, and basic planning/execution loops.*
+
+_Focus: Foundation, Auth, and basic planning/execution loops._
+
 - Local Auth & OAuth 2.0 (Google, GitHub)
 - Basic Dashboard & Quick Timer Widget
 - Exam Selection & Custom Exam Builder
@@ -552,7 +604,9 @@ gantt
 - Dark / Light Theme settings
 
 ### Phase 2 Features (Launch Target: Month 6)
-*Focus: Note-taking, scientific revision tools, mock test integration, and deep analytics.*
+
+_Focus: Note-taking, scientific revision tools, mock test integration, and deep analytics._
+
 - Rich Markdown Note Editor (Markdown + LaTeX)
 - Spaced Repetition System (SM-2 algorithm) & Card Carousel
 - Mock Test Diagnostic Logger
@@ -562,7 +616,9 @@ gantt
 - Security Session Manager
 
 ### Phase 3 Features (Launch Target: Month 9)
-*Focus: AI integrations, notification triggers, and gamification.*
+
+_Focus: AI integrations, notification triggers, and gamification._
+
 - AI Note Doubt Solver (RAG integration)
 - AI Study Schedule Planner
 - AI Flashcard Generator
@@ -572,7 +628,9 @@ gantt
 - Weekly Performance PDF Reports
 
 ### Future Features (Phase 4+)
-*Focus: Collaboration, scaling, and platform diversification.*
+
+_Focus: Collaboration, scaling, and platform diversification._
+
 - Virtual Co-Study Rooms (Live timer sharing, ambient audio, chat widgets)
 - Crowd-sourced Syllabus & Flashcard Templates Marketplace
 - Native iOS and Android Mobile apps with offline widget sync

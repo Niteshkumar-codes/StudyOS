@@ -30,8 +30,7 @@ export function calculateSM2(
   }
 
   // Adjust Ease Factor (EF)
-  easeFactor =
-    easeFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
+  easeFactor = easeFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
 
   // Cap Ease Factor at a minimum of 1.3
   if (easeFactor < 1.3) {

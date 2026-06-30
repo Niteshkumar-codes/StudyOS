@@ -1,16 +1,23 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
-import { calculateSM2 } from '@studyos/utils';
-import type { Settings } from '@studyos/types';
+import passport from 'passport';
+import { connectDB } from './config/db';
+import { globalLimiter } from './middleware/rateLimiter';
+import authRoutes from './routes/authRoutes';
+import profileRoutes from './routes/profileRoutes';
 
 // Load environment variables
 dotenv.config();
 
 const app: Express = express();
 
-// Security Middlewares
+// Connect to MongoDB Database
+connectDB();
+
+// Global Middlewares
 app.use(helmet());
 app.use(
   cors({
@@ -18,7 +25,15 @@ app.use(
     credentials: true,
   }),
 );
+app.use(cookieParser());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Initialize Passport
+app.use(passport.initialize());
+
+// Apply global rate limiting
+app.use(globalLimiter);
 
 // Base diagnostic endpoint
 app.get('/health', (_req: Request, res: Response) => {
@@ -29,23 +44,16 @@ app.get('/health', (_req: Request, res: Response) => {
   });
 });
 
-// Boilerplate routes demonstrating types and utils integration
-app.get('/api/diagnostic', (_req: Request, res: Response) => {
-  const dummySettings: Settings = {
-    id: 's_01',
-    userId: 'u_01',
-    theme: 'dark',
-    dailyTargetHours: 4,
-    emailDigestEnabled: true,
-    pushNotificationsEnabled: false,
-  };
+// Routes mounting
+app.use('/api/auth', authRoutes);
+app.use('/api/profile', profileRoutes);
 
-  const sm2Calculation = calculateSM2(5, 2, 2.6, 6);
-
-  res.status(200).json({
-    message: 'Backend API successfully linked with packages/utils and packages/types!',
-    settingsTemplate: dummySettings,
-    spacedRepetitionMockResult: sm2Calculation,
+// Global Error Handler Middleware
+app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
+   
+  console.error('💥 Unhandled Exception:', err);
+  res.status(err.status || 500).json({
+    message: err.message || 'An unexpected server error occurred',
   });
 });
 
