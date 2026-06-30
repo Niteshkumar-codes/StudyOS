@@ -19,6 +19,11 @@ const generateOtpCode = (): string => {
 
 export const register = async (req: Request, res: Response) => {
   try {
+     
+    console.log('[Auth] Incoming register request');
+     
+    console.log('[Auth] Request body:', req.body);
+
     const { name, username, email, password, preparationTypes } = req.body;
 
     const lowerEmail = email.toLowerCase().trim();
@@ -27,16 +32,22 @@ export const register = async (req: Request, res: Response) => {
     // 1. Check if username is taken by a verified user
     const existingUsername = await User.findOne({ username: lowerUsername });
     if (existingUsername) {
+       
+      console.log(`[Auth] Registration failed: Username ${lowerUsername} already taken`);
       return res.status(400).json({ message: 'Username is already taken' });
     }
 
     // 2. Check if email is already registered and verified
     let user = await User.findOne({ email: lowerEmail });
     if (user && user.isVerified) {
+       
+      console.log(`[Auth] Registration failed: Email ${lowerEmail} already registered`);
       return res.status(400).json({ message: 'Email is already registered' });
     }
 
     // 3. If user exists but is not verified, update details
+     
+    console.log('[Auth] User creation process started');
     if (user && !user.isVerified) {
       user.name = name;
       user.username = lowerUsername;
@@ -60,31 +71,40 @@ export const register = async (req: Request, res: Response) => {
     }
 
     // 4. Generate OTP
+     
+    console.log('[Auth] OTP generation initiated');
     const code = generateOtpCode();
      
-    console.log(`[Auth] OTP generated for ${lowerEmail}: ${code}`);
+    console.log(`[Auth] OTP generated value: ${code} for ${lowerEmail}`);
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
 
     // Delete any old OTPs for this email
     await Otp.deleteMany({ email: lowerEmail });
 
     // Save new OTP
-    await Otp.create({
+    const otpDoc = await Otp.create({
       email: lowerEmail,
       code,
       expiresAt,
     });
      
-    console.log(`[Auth] OTP saved for ${lowerEmail}`);
+    console.log('[Auth] OTP save result: success');
+     
+    console.log(`[Auth] MongoDB document ID: ${otpDoc._id}`);
 
     // 5. Send OTP via email
+     
+    console.log(`[Auth] Mail service called for: ${lowerEmail}`);
     await sendOtpEmail(lowerEmail, code);
 
-    return res.status(201).json({
+    const payload = {
       message: 'Registration initiated. OTP code sent to your email.',
       email: lowerEmail,
       smtpConfigured: !!(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS),
-    });
+    };
+     
+    console.log('[Auth] API response sent. Status: 201. Payload:', payload);
+    return res.status(201).json(payload);
   } catch (error: any) {
      
     console.error('Registration Error:', error);
