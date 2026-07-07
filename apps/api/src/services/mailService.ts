@@ -67,6 +67,22 @@ if (host && user && pass) {
 }
 
 /**
+ * Verify the SMTP transporter.
+ */
+export const verifyTransporter = async (): Promise<void> => {
+  if (!transporter) {
+    console.error(new Error('SMTP transporter is not configured. Missing host, user, or pass.'));
+    return;
+  }
+  try {
+    await transporter.verify();
+    console.log('SMTP connected successfully');
+  } catch (error: any) {
+    console.error(error);
+  }
+};
+
+/**
  * Send an OTP verification email.
  */
 export const sendOtpEmail = async (email: string, otp: string): Promise<void> => {
@@ -121,33 +137,23 @@ export const sendOtpEmail = async (email: string, otp: string): Promise<void> =>
     </html>
   `;
 
-   
-  console.log(`[SMTP] SMTP configuration status: configured = ${transporter ? 'yes' : 'no'}`);
-
   if (transporter) {
+    console.log('Email sending started');
     try {
-      // 3. Before sending email, verify the transporter.
       await transporter.verify();
-
-       
-      console.log(`[SMTP] Email send attempt initiated to: ${email}`);
       await transporter.sendMail({
         from,
         to: email,
         subject,
         html,
       });
-       
-      console.log(`[SMTP] Email sent successfully to: ${email}`);
+      console.log('Email successfully delivered');
     } catch (error) {
-      // 4. If verification fails, print the exact SMTP error.
-       
-      console.error(`[SMTP] SMTP connection verification/sending failed for ${email}:`, error);
+      console.error(error);
       throw error;
     }
   } else {
-    // 7. Keep console fallback only for development when SMTP is intentionally not configured.
-     
+    // Keep console fallback only for development when SMTP is intentionally not configured.
     console.warn(`[SMTP] Console fallback execution triggered for: ${email}`);
     logOtpToConsole(email, otp);
   }

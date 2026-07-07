@@ -18,6 +18,7 @@ import { ResetPassword } from './pages/ResetPassword';
 import { Profile } from './pages/Profile';
 import { Dashboard } from './pages/Dashboard';
 import { GoogleCallback } from './pages/GoogleCallback';
+import { PlaceholderPage } from './pages/PlaceholderPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -52,6 +53,16 @@ export default function App() {
                 <Route element={<AppLayout />}>
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/profile" element={<Profile />} />
+                  <Route path="/exams" element={<PlaceholderPage title="Exams" description="Manage your scheduled exams, test dates, and preparation targets." />} />
+                  <Route path="/subjects" element={<PlaceholderPage title="Subjects" description="Organize your study resources, textbooks, and notes by subject." />} />
+                  <Route path="/syllabus" element={<PlaceholderPage title="Syllabus" description="Track your curriculum coverage and topic-wise progress." />} />
+                  <Route path="/planner" element={<PlaceholderPage title="Planner" description="Schedule study sessions, set deadlines, and manage your tasks." />} />
+                  <Route path="/timer" element={<PlaceholderPage title="Study Timer" description="Focus with Pomodoro sessions and track your active study hours." />} />
+                  <Route path="/notes" element={<PlaceholderPage title="Notes" description="Capture quick concepts, lecture notes, and revision summaries." />} />
+                  <Route path="/mock-tests" element={<PlaceholderPage title="Mock Tests" description="Practice with simulated test environments and previous year papers." />} />
+                  <Route path="/analytics" element={<PlaceholderPage title="Analytics" description="Visualize your study patterns, strengths, and areas of improvement." />} />
+                  <Route path="/reports" element={<PlaceholderPage title="Reports" description="Generate performance reports and study log summaries." />} />
+                  <Route path="/settings" element={<PlaceholderPage title="Settings" description="Customize your profile, notification rules, and system theme preferences." />} />
                 </Route>
               </Route>
 

@@ -4,6 +4,7 @@ import app from './app';
 import { User } from './models/User';
 import { Otp } from './models/Otp';
 import { RefreshToken } from './models/RefreshToken';
+import { verifyTransporter } from './services/mailService';
 
 const PORT = 5555;
 const TEST_MONGO_URI = 'mongodb://127.0.0.1:27017/studyos_test';
@@ -29,6 +30,7 @@ async function runTests() {
     console.log('✔ Cleaned test collections.');
 
     // 2. Start server
+    await verifyTransporter();
     server = app.listen(PORT);
      
     console.log(`✔ Test server listening on http://localhost:${PORT}`);

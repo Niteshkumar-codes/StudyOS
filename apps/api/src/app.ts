@@ -1,16 +1,17 @@
+import dotenv from 'dotenv';
+// Load environment variables immediately before other imports
+dotenv.config();
+
 import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
-import dotenv from 'dotenv';
 import passport from 'passport';
 import { connectDB } from './config/db';
 import { globalLimiter } from './middleware/rateLimiter';
 import authRoutes from './routes/authRoutes';
 import profileRoutes from './routes/profileRoutes';
 
-// Load environment variables
-dotenv.config();
 
 const app: Express = express();
 
