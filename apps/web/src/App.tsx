@@ -66,6 +66,13 @@ export default function App() {
                 </Route>
               </Route>
 
+              {/* Development-only preview route */}
+              {((import.meta as any).env?.DEV) && (
+                <Route element={<AppLayout />}>
+                  <Route path="/dev/dashboard" element={<Dashboard />} />
+                </Route>
+              )}
+
               {/* Redirects */}
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="*" element={<Navigate to="/dashboard" replace />} />
