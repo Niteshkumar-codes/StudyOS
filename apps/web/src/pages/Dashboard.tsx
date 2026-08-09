@@ -1,5 +1,7 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useExams } from '../contexts/ExamContext';
 import { StatsCard } from '../components/StatsCard';
 import {
   Calendar,
@@ -12,6 +14,8 @@ import {
 
 export const Dashboard: React.FC = () => {
   const { user } = useAuth();
+  const { exams } = useExams();
+  const navigate = useNavigate();
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -72,9 +76,10 @@ export const Dashboard: React.FC = () => {
         />
         <StatsCard
           title="Active Exams"
-          value="0"
+          value={String(exams.length)}
           description="Preparation tracks"
           icon={<GraduationCap className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />}
+          onClick={() => navigate('/exams')}
         />
       </section>
     </div>

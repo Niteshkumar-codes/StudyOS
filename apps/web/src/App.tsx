@@ -19,6 +19,9 @@ import { Profile } from './pages/Profile';
 import { Dashboard } from './pages/Dashboard';
 import { GoogleCallback } from './pages/GoogleCallback';
 import { PlaceholderPage } from './pages/PlaceholderPage';
+import { Exams } from './pages/Exams';
+import { ExamDetails } from './pages/ExamDetails';
+import { ExamProvider } from './contexts/ExamContext';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -34,7 +37,8 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <AuthProvider>
-          <BrowserRouter>
+          <ExamProvider>
+            <BrowserRouter>
             <Routes>
               {/* Public Routes with AuthLayout (forms) */}
               <Route element={<PublicRoute />}>
@@ -53,7 +57,8 @@ export default function App() {
                 <Route element={<AppLayout />}>
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/profile" element={<Profile />} />
-                  <Route path="/exams" element={<PlaceholderPage title="Exams" description="Manage your scheduled exams, test dates, and preparation targets." />} />
+                  <Route path="/exams" element={<Exams />} />
+                  <Route path="/exams/:examId" element={<ExamDetails />} />
                   <Route path="/subjects" element={<PlaceholderPage title="Subjects" description="Organize your study resources, textbooks, and notes by subject." />} />
                   <Route path="/syllabus" element={<PlaceholderPage title="Syllabus" description="Track your curriculum coverage and topic-wise progress." />} />
                   <Route path="/planner" element={<PlaceholderPage title="Planner" description="Schedule study sessions, set deadlines, and manage your tasks." />} />
@@ -92,6 +97,7 @@ export default function App() {
               },
             }}
           />
+          </ExamProvider>
         </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>
