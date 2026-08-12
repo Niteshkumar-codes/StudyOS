@@ -71,7 +71,7 @@ if (host && user && pass) {
  */
 export const verifyTransporter = async (): Promise<void> => {
   if (!transporter) {
-    console.error(new Error('SMTP transporter is not configured. Missing host, user, or pass.'));
+    console.warn('SMTP transporter is not configured. Skipping email transport verification.');
     return;
   }
   try {

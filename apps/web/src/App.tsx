@@ -12,7 +12,6 @@ import { AppLayout } from './layouts/AppLayout';
 // Pages
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
-import { VerifyOtp } from './pages/VerifyOtp';
 import { ForgotPassword } from './pages/ForgotPassword';
 import { ResetPassword } from './pages/ResetPassword';
 import { Profile } from './pages/Profile';
@@ -45,7 +44,7 @@ export default function App() {
                 <Route element={<AuthLayout />}>
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
-                  <Route path="/verify-otp" element={<VerifyOtp />} />
+                  {/* OTP verification removed from normal flow */}
                   <Route path="/forgot-password" element={<ForgotPassword />} />
                   <Route path="/reset-password" element={<ResetPassword />} />
                   <Route path="/auth/google-callback" element={<GoogleCallback />} />

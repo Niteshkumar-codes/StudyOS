@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
 import crypto from 'crypto';
 import { User } from '../models/User';
-import { Otp } from '../models/Otp';
-import { sendOtpEmail, sendResetPasswordEmail } from '../services/mailService';
+import { sendResetPasswordEmail } from '../services/mailService';
 import {
   generateAccessToken,
   generateRefreshToken,
@@ -12,10 +11,6 @@ import {
   rotateRefreshToken,
   revokeRefreshToken,
 } from '../services/tokenService';
-
-const generateOtpCode = (): string => {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-};
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -70,99 +65,13 @@ export const register = async (req: Request, res: Response) => {
       console.log(`[Auth] User created: ${lowerEmail}`);
     }
 
-    // 4. Generate OTP
-     
-    console.log('[Auth] OTP generation initiated');
-    const code = generateOtpCode();
-     
-    console.log(`[Auth] OTP generated value: ${code} for ${lowerEmail}`);
-    const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
-
-    // Delete any old OTPs for this email
-    await Otp.deleteMany({ email: lowerEmail });
-
-    // Save new OTP
-    const otpDoc = await Otp.create({
-      email: lowerEmail,
-      code,
-      expiresAt,
-    });
-     
-    console.log('[Auth] OTP save result: success');
-     
-    console.log(`[Auth] MongoDB document ID: ${otpDoc._id}`);
-
-    // 5. Send OTP via email
-     
-    console.log(`[Auth] Mail service called for: ${lowerEmail}`);
-    await sendOtpEmail(lowerEmail, code);
-
-    const payload = {
-      message: 'Registration initiated. OTP code sent to your email.',
-      email: lowerEmail,
-      smtpConfigured: !!(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS),
-    };
-     
-    console.log('[Auth] API response sent. Status: 201. Payload:', payload);
-    return res.status(201).json(payload);
-  } catch (error: any) {
-     
-    console.error('Registration Error:', error);
-    return res.status(500).json({ message: 'Registration failed. Please try again.' });
-  }
-};
-
-export const verifyOtp = async (req: Request, res: Response) => {
-  try {
-    const { email, code } = req.body;
-    const lowerEmail = email.toLowerCase().trim();
-
-     
-    console.log(`[Auth] Verify request received for ${lowerEmail} with code: ${code}`);
-
-    const otpDoc = await Otp.findOne({ email: lowerEmail });
-    if (!otpDoc) {
-       
-      console.log(`[Auth] OTP expired for ${lowerEmail}`);
-      return res
-        .status(400)
-        .json({ message: 'Verification code expired or not found. Please request a new one.' });
-    }
-
-    // Attempt rate limiting (max 3 attempts per OTP)
-    if (otpDoc.attempts >= 3) {
-      await Otp.deleteOne({ email: lowerEmail });
-       
-      console.log(`[Auth] OTP expired (too many failed attempts) for ${lowerEmail}`);
-      return res
-        .status(400)
-        .json({ message: 'Too many invalid attempts. Please request a new verification code.' });
-    }
-
-    if (otpDoc.code !== code) {
-      otpDoc.attempts += 1;
-      await otpDoc.save();
-      return res.status(400).json({ message: 'Invalid verification code' });
-    }
-
-     
-    console.log(`[Auth] OTP matched for ${lowerEmail}`);
-
-    // Verified! Update user status
-    const user = await User.findOne({ email: lowerEmail });
-    if (!user) {
-      return res.status(404).json({ message: 'User profile not found' });
-    }
+    // Previously registration created an OTP and required email verification.
+    // New flow: complete registration immediately (no OTP) and return session tokens.
 
     user.isVerified = true;
     await user.save();
-     
-    console.log(`[Auth] Account verified: ${lowerEmail}`);
 
-    // Clean up OTP document
-    await Otp.deleteOne({ email: lowerEmail });
-
-    // Generate JWT tokens
+    // Generate JWT tokens and set refresh cookie
     const payload = { userId: user.id, username: user.username, email: user.email };
     const accessToken = generateAccessToken(payload);
     const refreshToken = generateRefreshToken(payload);
@@ -170,8 +79,8 @@ export const verifyOtp = async (req: Request, res: Response) => {
     await saveRefreshToken(user._id as any, refreshToken);
     setRefreshTokenCookie(res, refreshToken);
 
-    return res.status(200).json({
-      message: 'Account verified successfully',
+    return res.status(201).json({
+      message: 'Registration successful',
       accessToken,
       user: {
         id: user.id,
@@ -185,62 +94,23 @@ export const verifyOtp = async (req: Request, res: Response) => {
         createdAt: user.createdAt,
       },
     });
-  } catch (error) {
+  } catch (error: any) {
      
-    console.error('OTP Verification Error:', error);
-    return res.status(500).json({ message: 'OTP verification failed.' });
+    console.error('Registration Error:', error);
+    return res.status(500).json({ message: 'Registration failed. Please try again.' });
   }
 };
 
+export const verifyOtp = async (req: Request, res: Response) => {
+  return res.status(410).json({
+    message: 'Email OTP verification is disabled. Please use Google sign-in.',
+  });
+};
+
 export const resendOtp = async (req: Request, res: Response) => {
-  try {
-    const { email } = req.body;
-    const lowerEmail = email.toLowerCase().trim();
-
-    const user = await User.findOne({ email: lowerEmail });
-    if (!user) {
-      return res.status(404).json({ message: 'Email address not registered' });
-    }
-
-    if (user.isVerified) {
-      return res.status(400).json({ message: 'This account is already verified' });
-    }
-
-    // Rate Limit Check: enforce 60 seconds delay between OTP generation requests
-    const latestOtp = await Otp.findOne({ email: lowerEmail });
-    if (latestOtp) {
-      const diffMs = Date.now() - latestOtp.createdAt.getTime();
-      if (diffMs < 60 * 1000) {
-        const waitSec = Math.ceil((60 * 1000 - diffMs) / 1000);
-        return res
-          .status(429)
-          .json({ message: `Please wait ${waitSec} seconds before requesting a new OTP.` });
-      }
-    }
-
-    // Generate and save new OTP
-    const code = generateOtpCode();
-     
-    console.log(`[Auth] OTP generated for ${lowerEmail}: ${code}`);
-    const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
-
-    await Otp.deleteMany({ email: lowerEmail });
-    await Otp.create({
-      email: lowerEmail,
-      code,
-      expiresAt,
-    });
-     
-    console.log(`[Auth] OTP saved for ${lowerEmail}`);
-
-    await sendOtpEmail(lowerEmail, code);
-
-    return res.status(200).json({ message: 'New verification code sent to your email.' });
-  } catch (error) {
-     
-    console.error('Resend OTP Error:', error);
-    return res.status(500).json({ message: 'Failed to resend OTP. Please try again.' });
-  }
+  return res.status(410).json({
+    message: 'Email OTP resend is disabled. Please use Google sign-in.',
+  });
 };
 
 export const checkUsername = async (req: Request, res: Response) => {
@@ -276,21 +146,9 @@ export const login = async (req: Request, res: Response) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    // Check if account is verified
     if (!user.isVerified) {
-      // Trigger new OTP so user can verify
-      const code = generateOtpCode();
-       
-      console.log(`[Auth] OTP generated for ${user.email}: ${code}`);
-      const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
-      await Otp.deleteMany({ email: user.email });
-      await Otp.create({ email: user.email, code, expiresAt });
-       
-      console.log(`[Auth] OTP saved for ${user.email}`);
-      await sendOtpEmail(user.email, code);
-
       return res.status(403).json({
-        message: 'Account not verified. A verification code has been sent to your email.',
+        message: 'Account is not verified. Please continue with Google sign-in.',
         verified: false,
         email: user.email,
       });
