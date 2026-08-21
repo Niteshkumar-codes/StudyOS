@@ -20,6 +20,8 @@ import { GoogleCallback } from './pages/GoogleCallback';
 import { PlaceholderPage } from './pages/PlaceholderPage';
 import { Exams } from './pages/Exams';
 import { ExamDetails } from './pages/ExamDetails';
+import { Subjects } from './pages/Subjects';
+import { Planner } from './pages/Planner';
 import { ExamProvider } from './contexts/ExamContext';
 
 const queryClient = new QueryClient({
@@ -58,9 +60,9 @@ export default function App() {
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/exams" element={<Exams />} />
                   <Route path="/exams/:examId" element={<ExamDetails />} />
-                  <Route path="/subjects" element={<PlaceholderPage title="Subjects" description="Organize your study resources, textbooks, and notes by subject." />} />
-                  <Route path="/syllabus" element={<PlaceholderPage title="Syllabus" description="Track your curriculum coverage and topic-wise progress." />} />
-                  <Route path="/planner" element={<PlaceholderPage title="Planner" description="Schedule study sessions, set deadlines, and manage your tasks." />} />
+                  <Route path="/subjects" element={<Subjects />} />
+                  <Route path="/syllabus" element={<Subjects />} />
+                  <Route path="/planner" element={<Planner />} />
                   <Route path="/timer" element={<PlaceholderPage title="Study Timer" description="Focus with Pomodoro sessions and track your active study hours." />} />
                   <Route path="/notes" element={<PlaceholderPage title="Notes" description="Capture quick concepts, lecture notes, and revision summaries." />} />
                   <Route path="/mock-tests" element={<PlaceholderPage title="Mock Tests" description="Practice with simulated test environments and previous year papers." />} />

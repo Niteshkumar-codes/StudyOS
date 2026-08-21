@@ -11,6 +11,7 @@ import { connectDB } from './config/db';
 import { globalLimiter } from './middleware/rateLimiter';
 import authRoutes from './routes/authRoutes';
 import profileRoutes from './routes/profileRoutes';
+import studyRoutes from './routes/studyRoutes';
 
 
 const app: Express = express();
@@ -48,6 +49,7 @@ app.get('/health', (_req: Request, res: Response) => {
 // Routes mounting
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
+app.use('/api/study', studyRoutes);
 
 // Global Error Handler Middleware
 app.use((err: any, req: Request, res: Response, _next: NextFunction) => {

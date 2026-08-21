@@ -19,30 +19,48 @@ export interface Exam {
   createdAt: string;
 }
 
-export interface Subject {
-  id: string;
-  examId: string;
-  name: string;
-  weightage: number;
-  color: string;
-  createdAt: string;
-}
+export type SyllabusTopicStatus = 'Not Started' | 'In Progress' | 'Completed';
 
-export type TopicDifficulty = 'Easy' | 'Medium' | 'Hard';
-export type TopicImportance = 'Low' | 'Medium' | 'High';
-export type TopicStatus = 'Not Started' | 'In Progress' | 'Completed' | 'Mastered';
-
-export interface Topic {
+export interface SyllabusTopic {
   id: string;
-  subjectId: string;
-  name: string;
-  difficulty: TopicDifficulty;
-  importance: TopicImportance;
-  status: TopicStatus;
-  revisionCount: number;
+  title: string;
+  status: SyllabusTopicStatus;
   createdAt: string;
   updatedAt: string;
 }
+
+export interface Subject {
+  id: string;
+  examId?: string;
+  name: string;
+  description?: string;
+  color?: string;
+  icon?: string;
+  topics: SyllabusTopic[];
+  totalTopics: number;
+  completedTopics: number;
+  progressPercentage: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type StudyTaskStatus = 'Pending' | 'In Progress' | 'Completed';
+
+export interface StudyTask {
+  id: string;
+  subjectId?: string;
+  subjectName?: string;
+  subjectColor?: string;
+  title: string;
+  description?: string;
+  scheduledDate: string;
+  durationMinutes: number;
+  status: StudyTaskStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type Topic = SyllabusTopic;
 
 export interface StudySession {
   id: string;
@@ -65,16 +83,20 @@ export interface StudyLog {
 
 export type TaskPriority = 'P0' | 'P1' | 'P2' | 'P3';
 
-export interface PlannerTask {
-  id: string;
-  userId: string;
-  topicId?: string;
-  title: string;
-  startTime: string;
-  endTime: string;
-  priority: TaskPriority;
-  isCompleted: boolean;
-  createdAt: string;
+export type PlannerTask = StudyTask;
+
+export interface StudyDashboardSummary {
+  subjectCount: number;
+  totalTaskCount: number;
+  todayTaskCount: number;
+  todayPendingTasks: number;
+  todayCompletedTasks: number;
+  syllabusProgress: number;
+  syllabusCompletedTopics: number;
+  syllabusTotalTopics: number;
+  subjects: Subject[];
+  todayTasks: StudyTask[];
+  tasks: StudyTask[];
 }
 
 export interface Note {

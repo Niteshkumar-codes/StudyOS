@@ -53,3 +53,11 @@ export function formatDuration(seconds: number): string {
   const s = seconds % 60;
   return [h, m, s].map((v) => v.toString().padStart(2, '0')).join(':');
 }
+
+/**
+ * Returns a YYYY-MM-DD date key in the local timezone.
+ */
+export function getLocalDateKey(date: Date = new Date()): string {
+  const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60_000);
+  return localDate.toISOString().slice(0, 10);
+}
