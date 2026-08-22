@@ -60,9 +60,71 @@ export interface StudyTask {
   updatedAt: string;
 }
 
-export type Topic = SyllabusTopic;
+export type StudySessionStatus = 'Completed';
 
 export interface StudySession {
+  id: string;
+  userId: string;
+  subjectId: string;
+  subjectName?: string;
+  subjectColor?: string;
+  title?: string;
+  note?: string;
+  startedAt: string;
+  endedAt: string;
+  durationSeconds: number;
+  sessionDate: string;
+  status: StudySessionStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface StudyAnalyticsSubjectTime {
+  subjectId: string;
+  subjectName: string;
+  subjectColor?: string;
+  studySeconds: number;
+  sessionCount: number;
+  progressPercentage: number;
+}
+
+export interface StudyAnalyticsDailyActivity {
+  date: string;
+  label: string;
+  studySeconds: number;
+  sessionCount: number;
+}
+
+export interface StudyAnalyticsResponse {
+  totalStudySeconds: number;
+  todayStudySeconds: number;
+  weeklyStudySeconds: number;
+  completedStudySessionCount: number;
+  averageSessionSeconds: number;
+  longestSessionSeconds: number;
+  activeDays: number;
+  consistencyPercentage: number;
+  currentStreakDays: number;
+  recentSessions: StudySession[];
+  subjectStudyTime: StudyAnalyticsSubjectTime[];
+  dailyActivity: StudyAnalyticsDailyActivity[];
+  syllabus: {
+    totalTopics: number;
+    completedTopics: number;
+    progressPercentage: number;
+    subjectProgress: {
+      subjectId: string;
+      subjectName: string;
+      completedTopics: number;
+      totalTopics: number;
+      progressPercentage: number;
+    }[];
+  };
+}
+
+export type Topic = SyllabusTopic;
+
+export interface StudySessionLegacy {
   id: string;
   userId: string;
   startTime: string;
@@ -94,6 +156,11 @@ export interface StudyDashboardSummary {
   syllabusProgress: number;
   syllabusCompletedTopics: number;
   syllabusTotalTopics: number;
+  totalStudySeconds?: number;
+  todayStudySeconds?: number;
+  weeklyStudySeconds?: number;
+  completedStudySessionCount?: number;
+  recentStudySessions?: StudySession[];
   subjects: Subject[];
   todayTasks: StudyTask[];
   tasks: StudyTask[];

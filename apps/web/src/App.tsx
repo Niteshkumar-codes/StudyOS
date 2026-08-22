@@ -22,6 +22,8 @@ import { Exams } from './pages/Exams';
 import { ExamDetails } from './pages/ExamDetails';
 import { Subjects } from './pages/Subjects';
 import { Planner } from './pages/Planner';
+import { StudyTimer } from './pages/StudyTimer';
+import { Analytics } from './pages/Analytics';
 import { ExamProvider } from './contexts/ExamContext';
 
 const queryClient = new QueryClient({
@@ -63,10 +65,10 @@ export default function App() {
                   <Route path="/subjects" element={<Subjects />} />
                   <Route path="/syllabus" element={<Subjects />} />
                   <Route path="/planner" element={<Planner />} />
-                  <Route path="/timer" element={<PlaceholderPage title="Study Timer" description="Focus with Pomodoro sessions and track your active study hours." />} />
+                  <Route path="/timer" element={<StudyTimer />} />
                   <Route path="/notes" element={<PlaceholderPage title="Notes" description="Capture quick concepts, lecture notes, and revision summaries." />} />
                   <Route path="/mock-tests" element={<PlaceholderPage title="Mock Tests" description="Practice with simulated test environments and previous year papers." />} />
-                  <Route path="/analytics" element={<PlaceholderPage title="Analytics" description="Visualize your study patterns, strengths, and areas of improvement." />} />
+                  <Route path="/analytics" element={<Analytics />} />
                   <Route path="/reports" element={<PlaceholderPage title="Reports" description="Generate performance reports and study log summaries." />} />
                   <Route path="/settings" element={<PlaceholderPage title="Settings" description="Customize your profile, notification rules, and system theme preferences." />} />
                 </Route>

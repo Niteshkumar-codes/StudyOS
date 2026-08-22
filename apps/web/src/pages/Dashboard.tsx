@@ -16,7 +16,7 @@ import {
   Sparkles,
   CircleDot,
 } from 'lucide-react';
-import { getLocalDateKey } from '@studyos/utils';
+import { formatDuration, getLocalDateKey } from '@studyos/utils';
 import { getStudySummary } from '../lib/studyApi';
 
 export const Dashboard: React.FC = () => {
@@ -97,6 +97,83 @@ export const Dashboard: React.FC = () => {
           icon={<GraduationCap className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />}
           onClick={() => navigate('/exams')}
         />
+      </section>
+
+      <section className="grid grid-cols-1 xl:grid-cols-5 gap-6">
+        <div className="xl:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-5">
+          <StatsCard
+            title="Study Today"
+            value={formatDuration(summary?.todayStudySeconds || 0)}
+            description="Completed study time for the day"
+            icon={<Clock className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />}
+          />
+          <StatsCard
+            title="Study This Week"
+            value={formatDuration(summary?.weeklyStudySeconds || 0)}
+            description="Study time captured this week"
+            icon={<Flame className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />}
+          />
+          <StatsCard
+            title="Study Sessions"
+            value={String(summary?.completedStudySessionCount || 0)}
+            description="Completed timer sessions"
+            icon={<CheckCircle2 className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />}
+          />
+        </div>
+
+        <div className="xl:col-span-2 border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl bg-white dark:bg-[#121215] p-5 shadow-sm space-y-4">
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <div>
+              <h2 className="text-lg font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50">
+                Latest Study Session
+              </h2>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                Most recent completed session saved in MongoDB.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => navigate('/timer')}
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors"
+            >
+              Open Timer
+            </button>
+          </div>
+
+          {summary?.recentStudySessions?.[0] ? (
+            <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 p-4 bg-zinc-50/60 dark:bg-zinc-900/20 space-y-3">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <div className="text-[10px] uppercase tracking-wider font-bold text-zinc-400 dark:text-zinc-500">
+                    {summary.recentStudySessions[0].subjectName || 'Subject'}
+                  </div>
+                  <h3 className="mt-1 text-base font-bold text-zinc-900 dark:text-zinc-50">
+                    {summary.recentStudySessions[0].title || 'Study session'}
+                  </h3>
+                </div>
+                <Clock className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+              </div>
+
+              <div className="space-y-1.5 text-xs text-zinc-500 dark:text-zinc-400">
+                <div>{new Date(summary.recentStudySessions[0].startedAt).toLocaleString()}</div>
+                <div>{formatDuration(summary.recentStudySessions[0].durationSeconds)}</div>
+                <div>{summary.recentStudySessions[0].note || 'No note saved.'}</div>
+              </div>
+            </div>
+          ) : (
+            <div className="rounded-2xl border border-dashed border-zinc-200 dark:border-zinc-800/80 p-8 text-center bg-zinc-50/50 dark:bg-zinc-900/20">
+              <div className="w-12 h-12 mx-auto rounded-xl bg-white dark:bg-[#1c1c24] border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                <Clock className="w-5 h-5" />
+              </div>
+              <h3 className="mt-4 text-sm font-bold text-zinc-800 dark:text-zinc-200">
+                No study sessions saved yet
+              </h3>
+              <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400 max-w-sm mx-auto">
+                Use the timer to record your first completed study block.
+              </p>
+            </div>
+          )}
+        </div>
       </section>
 
       <section className="grid grid-cols-1 xl:grid-cols-5 gap-6">

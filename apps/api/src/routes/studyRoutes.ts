@@ -5,16 +5,21 @@ import { validateBody } from '../middleware/validationMiddleware';
 import {
   addSubjectTopic,
   createSubject,
+  createStudySession,
   createTask,
   deleteSubject,
   deleteSubjectTopic,
+  deleteStudySession,
   deleteTask,
   getStudySummary,
+  getStudyAnalytics,
   getSubject,
   listSubjects,
+  listStudySessions,
   listTasks,
   updateSubject,
   updateSubjectTopic,
+  updateStudySession,
   updateTask,
 } from '../controllers/studyController';
 
@@ -67,6 +72,24 @@ const taskUpdateSchema = z.object({
   status: z.enum(['Pending', 'In Progress', 'Completed']).optional(),
 });
 
+const studySessionSchema = z.object({
+  subjectId: z.string().trim().min(1, 'Please choose a subject'),
+  title: z.string().trim().max(120).optional().or(z.literal('')),
+  note: z.string().trim().max(1000).optional().or(z.literal('')),
+  startedAt: z.coerce.date(),
+  endedAt: z.coerce.date(),
+  durationSeconds: z.coerce.number().int().min(1).max(60 * 60 * 24),
+});
+
+const studySessionUpdateSchema = z.object({
+  subjectId: z.string().trim().min(1).optional(),
+  title: z.string().trim().max(120).optional().nullable(),
+  note: z.string().trim().max(1000).optional().nullable(),
+  startedAt: z.coerce.date().optional(),
+  endedAt: z.coerce.date().optional(),
+  durationSeconds: z.coerce.number().int().min(1).max(60 * 60 * 24).optional(),
+});
+
 router.use(authMiddleware as any);
 
 router.get('/summary', getStudySummary as any);
@@ -85,5 +108,12 @@ router.get('/tasks', listTasks as any);
 router.post('/tasks', validateBody(taskSchema), createTask as any);
 router.put('/tasks/:taskId', validateBody(taskUpdateSchema), updateTask as any);
 router.delete('/tasks/:taskId', deleteTask as any);
+
+router.get('/sessions', listStudySessions as any);
+router.post('/sessions', validateBody(studySessionSchema), createStudySession as any);
+router.put('/sessions/:sessionId', validateBody(studySessionUpdateSchema), updateStudySession as any);
+router.delete('/sessions/:sessionId', deleteStudySession as any);
+
+router.get('/analytics', getStudyAnalytics as any);
 
 export default router;

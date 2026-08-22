@@ -1,6 +1,8 @@
 import api from './api';
 import type {
+  StudyAnalyticsResponse,
   StudyDashboardSummary,
+  StudySession,
   StudyTask,
   StudyTaskStatus,
   Subject,
@@ -27,6 +29,23 @@ export interface TaskInput {
   scheduledDate: string;
   durationMinutes: number;
   status?: StudyTaskStatus;
+}
+
+export interface StudySessionInput {
+  subjectId: string;
+  title?: string | null;
+  note?: string | null;
+  startedAt: string;
+  endedAt: string;
+  durationSeconds: number;
+}
+
+export interface StudySessionsResponse {
+  sessions: StudySession[];
+  totalCount: number;
+  totalStudySeconds: number;
+  todayStudySeconds: number;
+  weeklyStudySeconds: number;
 }
 
 export const getStudySummary = async (date?: string) => {
@@ -83,4 +102,28 @@ export const updateTask = async (taskId: string, input: Partial<TaskInput>) => {
 export const deleteTask = async (taskId: string) => {
   const response = await api.delete(`/study/tasks/${taskId}`);
   return response.data as { message: string };
+};
+
+export const getStudySessions = async (params?: { subjectId?: string; limit?: number; offset?: number }) => {
+  const response = await api.get('/study/sessions', {
+    params: params || undefined,
+  });
+  return response.data as StudySessionsResponse;
+};
+
+export const createStudySession = async (input: StudySessionInput) => {
+  const response = await api.post('/study/sessions', input);
+  return response.data as { message: string; session: StudySession };
+};
+
+export const deleteStudySession = async (sessionId: string) => {
+  const response = await api.delete(`/study/sessions/${sessionId}`);
+  return response.data as { message: string };
+};
+
+export const getStudyAnalytics = async (days = 7) => {
+  const response = await api.get('/study/analytics', {
+    params: { days },
+  });
+  return response.data as StudyAnalyticsResponse;
 };
