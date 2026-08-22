@@ -4,6 +4,7 @@ import { getLocalDateKey } from '@studyos/utils';
 import { z } from 'zod';
 import { AuthenticatedRequest } from '../middleware/authMiddleware';
 import { Subject } from '../models/Subject';
+import { Note } from '../models/Note';
 import { StudySession } from '../models/StudySession';
 import { StudyTask } from '../models/StudyTask';
 
@@ -59,6 +60,23 @@ const serializeTask = (task: any, subjectsMap?: Map<string, any>) => {
     status: task.status,
     createdAt: task.createdAt.toISOString(),
     updatedAt: task.updatedAt.toISOString(),
+  };
+};
+
+const serializeNote = (note: any, subjectsMap?: Map<string, any>) => {
+  const subject = note.subjectId && subjectsMap ? subjectsMap.get(note.subjectId.toString()) : null;
+
+  return {
+    id: note._id.toString(),
+    userId: note.userId.toString(),
+    subjectId: note.subjectId ? note.subjectId.toString() : undefined,
+    subjectName: subject?.name,
+    subjectColor: subject?.color,
+    title: note.title,
+    content: note.content,
+    tags: note.tags || [],
+    createdAt: note.createdAt.toISOString(),
+    updatedAt: note.updatedAt.toISOString(),
   };
 };
 
@@ -259,10 +277,11 @@ export const getStudySummary = async (req: AuthenticatedRequest, res: Response) 
     const userId = getUserId(req, res);
     if (!userId) return;
 
-    const [subjects, tasks, sessions] = await Promise.all([
+    const [subjects, tasks, sessions, notes] = await Promise.all([
       Subject.find({ userId }).sort({ createdAt: -1 }),
       StudyTask.find({ userId }).sort({ scheduledDate: 1, createdAt: -1 }),
       StudySession.find({ userId }).sort({ startedAt: -1 }),
+      Note.find({ userId }).sort({ updatedAt: -1, createdAt: -1 }),
     ]);
 
     const todayKey = typeof req.query.date === 'string' ? req.query.date : getLocalDateKey();
@@ -272,6 +291,7 @@ export const getStudySummary = async (req: AuthenticatedRequest, res: Response) 
     const todayPendingTasks = todayTasks.filter((task) => task.status !== 'Completed').length;
     const syllabusProgress = buildSubjectProgress(subjects);
     const sessionMetrics = buildStudySessionMetrics(subjects, sessions);
+    const recentNotes = notes.slice(0, 3).map((note) => serializeNote(note, subjectsMap));
 
     return res.status(200).json({
       subjectCount: subjects.length,
@@ -287,6 +307,8 @@ export const getStudySummary = async (req: AuthenticatedRequest, res: Response) 
       weeklyStudySeconds: sessionMetrics.weeklyStudySeconds,
       completedStudySessionCount: sessionMetrics.completedStudySessionCount,
       recentStudySessions: sessionMetrics.recentSessions,
+      noteCount: notes.length,
+      recentNotes,
       subjects: subjects.map(serializeSubject),
       todayTasks: todayTasks.map((task) => serializeTask(task, subjectsMap)),
       tasks: tasks.map((task) => serializeTask(task, subjectsMap)),

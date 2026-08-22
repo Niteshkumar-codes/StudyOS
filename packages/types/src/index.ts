@@ -161,6 +161,8 @@ export interface StudyDashboardSummary {
   weeklyStudySeconds?: number;
   completedStudySessionCount?: number;
   recentStudySessions?: StudySession[];
+  noteCount?: number;
+  recentNotes?: Note[];
   subjects: Subject[];
   todayTasks: StudyTask[];
   tasks: StudyTask[];
@@ -169,10 +171,12 @@ export interface StudyDashboardSummary {
 export interface Note {
   id: string;
   userId: string;
-  topicId?: string;
   title: string;
   content: string;
-  interlinkedNoteIds: string[];
+  subjectId?: string;
+  subjectName?: string;
+  subjectColor?: string;
+  tags: string[];
   createdAt: string;
   updatedAt: string;
 }

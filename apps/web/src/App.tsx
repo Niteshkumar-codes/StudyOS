@@ -24,6 +24,7 @@ import { Subjects } from './pages/Subjects';
 import { Planner } from './pages/Planner';
 import { StudyTimer } from './pages/StudyTimer';
 import { Analytics } from './pages/Analytics';
+import { NotesWorkspace } from './pages/NotesWorkspace';
 import { ExamProvider } from './contexts/ExamContext';
 
 const queryClient = new QueryClient({
@@ -66,7 +67,7 @@ export default function App() {
                   <Route path="/syllabus" element={<Subjects />} />
                   <Route path="/planner" element={<Planner />} />
                   <Route path="/timer" element={<StudyTimer />} />
-                  <Route path="/notes" element={<PlaceholderPage title="Notes" description="Capture quick concepts, lecture notes, and revision summaries." />} />
+                  <Route path="/notes" element={<NotesWorkspace />} />
                   <Route path="/mock-tests" element={<PlaceholderPage title="Mock Tests" description="Practice with simulated test environments and previous year papers." />} />
                   <Route path="/analytics" element={<Analytics />} />
                   <Route path="/reports" element={<PlaceholderPage title="Reports" description="Generate performance reports and study log summaries." />} />
