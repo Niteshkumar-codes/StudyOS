@@ -251,7 +251,7 @@ export const AppLayout: React.FC = () => {
                   <Link
                     key={link.path}
                     to={link.path}
-                    className={`flex items-center gap-3 py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200 relative outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50 hover:translate-x-0.5 hover:bg-zinc-50 dark:hover:bg-zinc-850/20 hover:text-zinc-950 dark:hover:text-zinc-50 group ${
+                    className={`flex items-center gap-3 py-2 px-3 rounded-xl text-sm font-medium transition-all duration-200 relative outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50 hover:translate-x-1 hover:bg-zinc-50 dark:hover:bg-zinc-850/20 hover:text-zinc-950 dark:hover:text-zinc-50 group ${
                       isActive
                         ? 'bg-zinc-100 dark:bg-zinc-850/50 text-zinc-955 dark:text-zinc-50 font-semibold shadow-sm'
                         : 'text-zinc-500 dark:text-zinc-400'
@@ -261,7 +261,7 @@ export const AppLayout: React.FC = () => {
                   >
                     {/* Active left indicator bar */}
                     {isActive && (
-                      <span className="absolute left-0 top-1.5 bottom-1.5 w-0.75 rounded-r-md bg-indigo-600 dark:bg-indigo-400" />
+                      <span className="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r-md bg-indigo-600 dark:bg-indigo-400" />
                     )}
                     <Icon
                       className={`w-4 h-4 shrink-0 transition-all duration-200 group-hover:scale-105 ${
@@ -302,7 +302,7 @@ export const AppLayout: React.FC = () => {
         <div className="p-3 border-t border-zinc-200/80 dark:border-zinc-800/60 flex flex-col gap-0.5 shrink-0">
           <Link
             to="/profile"
-            className={`flex items-center gap-3 py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200 hover:translate-x-0.5 hover:bg-zinc-50 dark:hover:bg-zinc-850/20 hover:text-zinc-950 dark:hover:text-zinc-50 relative outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50 ${
+            className={`flex items-center gap-3 py-2 px-3 rounded-xl text-sm font-medium transition-all duration-200 hover:translate-x-1 hover:bg-zinc-50 dark:hover:bg-zinc-850/20 hover:text-zinc-950 dark:hover:text-zinc-50 relative outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50 ${
               location.pathname === '/profile'
                 ? 'bg-zinc-100 dark:bg-zinc-850/50 text-zinc-955 dark:text-zinc-50 font-semibold'
                 : 'text-zinc-500 dark:text-zinc-400'
@@ -311,7 +311,7 @@ export const AppLayout: React.FC = () => {
             title={collapsed ? 'Profile' : undefined}
           >
             {location.pathname === '/profile' && (
-              <span className="absolute left-0 top-1.5 bottom-1.5 w-0.75 rounded-r-md bg-indigo-600 dark:bg-indigo-400" />
+              <span className="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r-md bg-indigo-600 dark:bg-indigo-400" />
             )}
             <User
               className={`w-4 h-4 shrink-0 transition-all duration-200 ${
@@ -323,7 +323,7 @@ export const AppLayout: React.FC = () => {
 
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 py-2 px-3 rounded-lg text-sm font-medium text-red-500 hover:bg-red-500/5 active:scale-[0.98] transition-all outline-none focus-visible:ring-2 focus-visible:ring-red-500/50 text-left"
+            className="w-full flex items-center gap-3 py-2 px-3 rounded-xl text-sm font-medium text-red-500 hover:bg-red-500/5 active:scale-[0.98] transition-all outline-none focus-visible:ring-2 focus-visible:ring-red-500/50 text-left hover:translate-x-1"
             title={collapsed ? 'Log Out' : undefined}
             aria-label="Log out"
           >
@@ -338,7 +338,7 @@ export const AppLayout: React.FC = () => {
         <div className="md:hidden fixed inset-0 z-50 flex" role="dialog" aria-modal="true">
           {/* Overlay backdrop */}
           <div
-            className="fixed inset-0 bg-zinc-900/40 dark:bg-black/60 backdrop-blur-[2px] transition-opacity"
+            className="fixed inset-0 bg-zinc-900/40 dark:bg-black/60 backdrop-blur-sm transition-opacity"
             onClick={() => setMobileOpen(false)}
           ></div>
 
@@ -349,7 +349,7 @@ export const AppLayout: React.FC = () => {
               <StudyOSLogo />
               <button
                 onClick={() => setMobileOpen(false)}
-                className="p-1.5 text-zinc-400 hover:text-zinc-650 dark:hover:text-zinc-200 outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50 rounded-lg"
+                className="p-1.5 text-zinc-400 hover:text-zinc-650 dark:hover:text-zinc-200 outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50 rounded-xl"
                 aria-label="Close mobile menu"
               >
                 <X className="w-4.5 h-4.5" />
@@ -371,15 +371,15 @@ export const AppLayout: React.FC = () => {
                         key={link.path}
                         to={link.path}
                         onClick={() => setMobileOpen(false)}
-                        className={`flex items-center gap-3 py-2 px-3 rounded-lg text-sm font-semibold transition-all relative group ${
+                        className={`flex items-center gap-3 py-2 px-3 rounded-xl text-sm font-semibold transition-all relative group ${
                           isActive
-                            ? 'bg-zinc-150 dark:bg-zinc-800 text-zinc-955 dark:text-zinc-50'
+                            ? 'bg-zinc-150 dark:bg-zinc-800 text-zinc-955 dark:text-zinc-50 font-bold'
                             : 'text-zinc-550 dark:text-zinc-400 hover:bg-zinc-100/50 dark:hover:bg-zinc-800/20'
                         }`}
                         aria-current={isActive ? 'page' : undefined}
                       >
                         {isActive && (
-                          <span className="absolute left-0 top-2.5 bottom-2.5 w-0.75 rounded-r-md bg-indigo-600 dark:bg-indigo-400" />
+                          <span className="absolute left-0 top-2.5 bottom-2.5 w-1 rounded-r-md bg-indigo-600 dark:bg-indigo-400" />
                         )}
                         <Icon
                           className={`w-4 h-4 transition-transform group-hover:scale-105 ${
@@ -399,15 +399,15 @@ export const AppLayout: React.FC = () => {
               <Link
                 to="/profile"
                 onClick={() => setMobileOpen(false)}
-                className={`flex items-center gap-3 py-2 px-3 rounded-lg text-sm font-semibold transition-all ${
+                className={`flex items-center gap-3 py-2 px-3 rounded-xl text-sm font-semibold transition-all ${
                   location.pathname === '/profile'
-                    ? 'bg-zinc-150 dark:bg-zinc-800 text-zinc-955 dark:text-zinc-50'
+                    ? 'bg-zinc-150 dark:bg-zinc-800 text-zinc-955 dark:text-zinc-50 font-bold'
                     : 'text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100/50 dark:hover:bg-zinc-800/20'
                 }`}
               >
                 <User
                   className={`w-4 h-4 ${
-                    location.pathname === '/profile' ? 'text-indigo-650 dark:text-indigo-400' : 'text-zinc-450 dark:text-zinc-500'
+                    location.pathname === '/profile' ? 'text-indigo-650 dark:text-indigo-400' : 'text-zinc-450 dark:text-zinc-555'
                   }`}
                 />
                 <span>Profile</span>
@@ -417,7 +417,7 @@ export const AppLayout: React.FC = () => {
                   setMobileOpen(false);
                   handleLogout();
                 }}
-                className="w-full flex items-center gap-3 py-2 px-3 rounded-lg text-sm font-semibold text-red-500 hover:bg-red-500/5 transition-colors text-left"
+                className="w-full flex items-center gap-3 py-2 px-3 rounded-xl text-sm font-semibold text-red-500 hover:bg-red-500/5 transition-colors text-left"
                 aria-label="Log out"
               >
                 <LogOut className="w-4 h-4 text-red-500" />
@@ -439,7 +439,7 @@ export const AppLayout: React.FC = () => {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileOpen(true)}
-              className="md:hidden p-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 text-zinc-550 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/30 outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50"
+              className="md:hidden p-1.5 rounded-xl border border-zinc-200 dark:border-zinc-800 text-zinc-550 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/30 outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50"
               aria-label="Open sidebar menu"
               aria-expanded={mobileOpen}
             >
@@ -449,7 +449,7 @@ export const AppLayout: React.FC = () => {
             {/* Logo in header (visible on mobile, tablet, and collapsed desktop) */}
             <Link
               to="/dashboard"
-              className={`outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50 rounded-lg p-1.5 ${
+              className={`outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50 rounded-xl p-1.5 ${
                 !collapsed ? 'md:hidden' : 'flex'
               }`}
               aria-label="StudyOS home"
@@ -461,7 +461,7 @@ export const AppLayout: React.FC = () => {
             <button
               onClick={() => setShowSearch(true)}
               aria-label="Search study items"
-              className="hidden sm:flex items-center gap-2 text-xs text-zinc-450 dark:text-zinc-550 px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-[#18181c]/50 text-left w-48 md:w-56 outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50 transition-colors"
+              className="hidden sm:flex items-center gap-2 text-xs text-zinc-450 dark:text-zinc-550 px-3 py-1.5 rounded-xl border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-[#18181c]/50 text-left w-48 md:w-56 outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50 transition-colors"
             >
               <Search className="w-3.5 h-3.5 shrink-0 text-zinc-400" />
               <span>Search...</span>
@@ -474,7 +474,7 @@ export const AppLayout: React.FC = () => {
             <button
               onClick={() => setShowSearch(true)}
               aria-label="Search"
-              className="sm:hidden p-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 text-zinc-505 hover:bg-zinc-50 dark:hover:bg-zinc-800/30"
+              className="sm:hidden p-1.5 rounded-xl border border-zinc-200 dark:border-zinc-800 text-zinc-505 hover:bg-zinc-50 dark:hover:bg-zinc-800/30"
             >
               <Search className="w-4 h-4" />
             </button>
@@ -486,7 +486,7 @@ export const AppLayout: React.FC = () => {
             <button
               onClick={() => setShowQuickAdd(true)}
               aria-label="Open quick add tool"
-              className="flex items-center gap-1.5 py-1.5 px-3 bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-850 dark:hover:bg-white text-white dark:text-zinc-950 rounded-lg text-xs font-semibold shadow-sm transition-all focus-visible:ring-2 focus-visible:ring-zinc-900 dark:focus-visible:ring-zinc-100 active:scale-[0.98]"
+              className="flex items-center gap-1.5 py-1.5 px-3 bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-850 dark:hover:bg-white text-white dark:text-zinc-950 rounded-xl text-xs font-semibold shadow-sm transition-all focus-visible:ring-2 focus-visible:ring-zinc-900 dark:focus-visible:ring-zinc-100 active:scale-[0.98]"
             >
               <Plus className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Quick Add</span>
@@ -502,7 +502,7 @@ export const AppLayout: React.FC = () => {
                 aria-expanded={showNotifications}
                 aria-haspopup="true"
                 aria-label="Toggle notifications list"
-                className="p-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-[#1c1c24] text-zinc-500 dark:text-zinc-450 transition-colors relative focus-visible:ring-2 focus-visible:ring-indigo-500/50 outline-none"
+                className="p-1.5 rounded-xl border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-[#1c1c24] text-zinc-500 dark:text-zinc-450 transition-colors relative focus-visible:ring-2 focus-visible:ring-indigo-500/50 outline-none"
               >
                 <Bell className="w-4 h-4" />
                 {notifications.some((n) => n.unread) && (
@@ -552,7 +552,7 @@ export const AppLayout: React.FC = () => {
             <button
               onClick={toggleTheme}
               aria-label="Toggle system theme"
-              className="p-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-[#1c1c24] text-zinc-500 dark:text-zinc-450 transition-colors focus-visible:ring-2 focus-visible:ring-indigo-500/50 outline-none"
+              className="p-1.5 rounded-xl border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-[#1c1c24] text-zinc-500 dark:text-zinc-450 transition-colors focus-visible:ring-2 focus-visible:ring-indigo-500/50 outline-none"
             >
               {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-450" /> : <Moon className="w-4 h-4 text-indigo-650" />}
             </button>
@@ -568,9 +568,9 @@ export const AppLayout: React.FC = () => {
                   aria-expanded={showProfileMenu}
                   aria-haspopup="true"
                   aria-label="Open user settings dropdown"
-                  className="flex items-center gap-1.5 p-0.5 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#1c1c24] transition-colors focus-visible:ring-2 focus-visible:ring-indigo-500/50 outline-none"
+                  className="flex items-center gap-1.5 p-0.5 border border-zinc-200 dark:border-zinc-800 rounded-xl hover:bg-zinc-50 dark:hover:bg-[#1c1c24] transition-colors focus-visible:ring-2 focus-visible:ring-indigo-500/50 outline-none"
                 >
-                  <div className="w-7 h-7 rounded-md bg-gradient-to-tr from-zinc-800 to-zinc-950 dark:from-zinc-100 dark:to-zinc-300 flex items-center justify-center text-white dark:text-zinc-900 text-xs font-bold shadow-sm uppercase shrink-0 select-none">
+                  <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-zinc-800 to-zinc-950 dark:from-zinc-100 dark:to-zinc-300 flex items-center justify-center text-white dark:text-zinc-900 text-xs font-bold shadow-sm uppercase shrink-0 select-none">
                     {user.name.slice(0, 2)}
                   </div>
                 </button>

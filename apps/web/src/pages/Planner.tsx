@@ -176,6 +176,14 @@ export const Planner: React.FC = () => {
   const loading = summaryQuery.isLoading;
   const error = summaryQuery.error;
 
+  const renderValue = (val: string | number) => {
+    return loading ? (
+      <span className="inline-block h-5 w-16 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse mt-1" />
+    ) : (
+      String(val)
+    );
+  };
+
   return (
     <div className="space-y-6 animate-fade-in-up font-sans text-left">
       <nav
@@ -222,25 +230,25 @@ export const Planner: React.FC = () => {
       <section aria-label="Planner statistics" className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
         <StatsCard
           title="Today's Tasks"
-          value={loading ? '...' : String(todayTasks.length)}
+          value={renderValue(todayTasks.length)}
           description="Scheduled for the current day"
           icon={<CalendarDays className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />}
         />
         <StatsCard
           title="Pending Today"
-          value={loading ? '...' : String(todayPending)}
+          value={renderValue(todayPending)}
           description="Tasks still to finish"
           icon={<Clock3 className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />}
         />
         <StatsCard
           title="Completed Today"
-          value={loading ? '...' : String(todayCompleted)}
+          value={renderValue(todayCompleted)}
           description="Tasks marked complete"
           icon={<CheckCircle2 className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />}
         />
         <StatsCard
           title="Study Minutes"
-          value={loading ? '...' : formatDuration(totalStudyMinutes * 60)}
+          value={renderValue(formatDuration(totalStudyMinutes * 60))}
           description="Planned across all tasks"
           icon={<Sparkles className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />}
         />

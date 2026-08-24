@@ -17,6 +17,15 @@ const config: Config = {
           warning: '#FBBF24',
           danger: '#F87171',
         },
+        zinc: {
+          450: '#898990',
+          505: '#606067',
+          550: '#5c5c63',
+          555: '#58585f',
+          705: '#333338',
+          850: '#202023',
+          855: '#1c1c1f',
+        },
       },
       fontFamily: {
         sans: ['Outfit', 'sans-serif'],

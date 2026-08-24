@@ -66,9 +66,16 @@
   animation: fade-in-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Custom styles for inputs */
-input:focus {
+/* Keyboard focus outline style */
+*:focus-visible {
   outline: none;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+/* Custom styles for inputs */
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
 }
 
 /* Premium SaaS Scrollbar Customization */

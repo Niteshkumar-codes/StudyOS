@@ -33,6 +33,14 @@ export const Dashboard: React.FC = () => {
   const summary = summaryQuery.data;
   const todayTasks = summary?.todayTasks ?? [];
 
+  const renderValue = (val: string | number) => {
+    return summaryQuery.isLoading ? (
+      <span className="inline-block h-5 w-16 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse mt-1" />
+    ) : (
+      String(val)
+    );
+  };
+
   const getGreeting = () => {
     const hour = new Date().getHours();
     if (hour < 12) return 'Good Morning';
@@ -41,7 +49,7 @@ export const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 animate-fade-in-up font-sans text-left">
+    <div className="space-y-6 animate-fade-in-up font-sans text-left">
       {/* 1. HERO HEADER */}
       <header className="border-b border-zinc-200/80 dark:border-zinc-800/60 pb-6">
         <span className="text-xs font-bold text-indigo-650 dark:text-indigo-400 uppercase tracking-wider block mb-1">
@@ -62,37 +70,37 @@ export const Dashboard: React.FC = () => {
       >
         <StatsCard
           title="Subjects"
-          value={summaryQuery.isLoading ? '...' : String(summary?.subjectCount || 0)}
+          value={renderValue(summary?.subjectCount || 0)}
           description="Created in your workspace"
           icon={<Calendar className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />}
         />
         <StatsCard
           title="Syllabus Progress"
-          value={summaryQuery.isLoading ? '...' : `${summary?.syllabusProgress || 0}%`}
+          value={renderValue(`${summary?.syllabusProgress || 0}%`)}
           description="Topics completed across subjects"
           icon={<Clock className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />}
         />
         <StatsCard
           title="Today's Tasks"
-          value={summaryQuery.isLoading ? '...' : String(summary?.todayTaskCount || 0)}
+          value={renderValue(summary?.todayTaskCount || 0)}
           description="Planned for today"
           icon={<Flame className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />}
         />
         <StatsCard
           title="Completed Today"
-          value={summaryQuery.isLoading ? '...' : String(summary?.todayCompletedTasks || 0)}
+          value={renderValue(summary?.todayCompletedTasks || 0)}
           description="Marked as done"
           icon={<Award className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />}
         />
         <StatsCard
           title="Pending Today"
-          value={summaryQuery.isLoading ? '...' : String(summary?.todayPendingTasks || 0)}
+          value={renderValue(summary?.todayPendingTasks || 0)}
           description="Still waiting in your queue"
           icon={<Target className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />}
         />
         <StatsCard
           title="Active Exams"
-          value={String(exams.length)}
+          value={renderValue(exams.length)}
           description="Preparation tracks"
           icon={<GraduationCap className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />}
           onClick={() => navigate('/exams')}
@@ -103,19 +111,19 @@ export const Dashboard: React.FC = () => {
         <div className="xl:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-5">
           <StatsCard
             title="Study Today"
-            value={formatDuration(summary?.todayStudySeconds || 0)}
+            value={renderValue(formatDuration(summary?.todayStudySeconds || 0))}
             description="Completed study time for the day"
             icon={<Clock className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />}
           />
           <StatsCard
             title="Study This Week"
-            value={formatDuration(summary?.weeklyStudySeconds || 0)}
+            value={renderValue(formatDuration(summary?.weeklyStudySeconds || 0))}
             description="Study time captured this week"
             icon={<Flame className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />}
           />
           <StatsCard
             title="Study Sessions"
-            value={String(summary?.completedStudySessionCount || 0)}
+            value={renderValue(summary?.completedStudySessionCount || 0)}
             description="Completed timer sessions"
             icon={<CheckCircle2 className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />}
           />
@@ -140,27 +148,41 @@ export const Dashboard: React.FC = () => {
             </button>
           </div>
 
-          {summary?.recentStudySessions?.[0] ? (
-            <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 p-4 bg-zinc-50/60 dark:bg-zinc-900/20 space-y-3">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <div className="text-[10px] uppercase tracking-wider font-bold text-zinc-400 dark:text-zinc-500">
-                    {summary.recentStudySessions[0].subjectName || 'Subject'}
-                  </div>
-                  <h3 className="mt-1 text-base font-bold text-zinc-900 dark:text-zinc-50">
-                    {summary.recentStudySessions[0].title || 'Study session'}
-                  </h3>
-                </div>
-                <Clock className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-              </div>
+          {(() => {
+            const latestSession = summary?.recentStudySessions?.[0];
+            const latestSessionSubject = latestSession && summary?.subjects
+              ? summary.subjects.find((s: any) => s.id === latestSession.subjectId)
+              : null;
+            const latestSessionColor = latestSessionSubject?.color;
 
-              <div className="space-y-1.5 text-xs text-zinc-500 dark:text-zinc-400">
-                <div>{new Date(summary.recentStudySessions[0].startedAt).toLocaleString()}</div>
-                <div>{formatDuration(summary.recentStudySessions[0].durationSeconds)}</div>
-                <div>{summary.recentStudySessions[0].note || 'No note saved.'}</div>
+            return latestSession ? (
+              <div
+                className="rounded-2xl border border-zinc-200 dark:border-zinc-800 p-4 bg-zinc-50/60 dark:bg-zinc-900/20 space-y-3"
+                style={{
+                  borderLeftWidth: latestSessionColor ? '4px' : undefined,
+                  borderLeftColor: latestSessionColor || undefined,
+                }}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="text-[10px] uppercase tracking-wider font-bold text-zinc-400 dark:text-zinc-500">
+                      {latestSession.subjectName || 'Subject'}
+                    </div>
+                    <h3 className="mt-1 text-base font-bold text-zinc-900 dark:text-zinc-50">
+                      {latestSession.title || 'Study session'}
+                    </h3>
+                  </div>
+                  <Clock className="w-4 h-4 text-indigo-650 dark:text-indigo-400" />
+                </div>
+
+                <div className="space-y-1.5 text-xs text-zinc-500 dark:text-zinc-400">
+                  <div>{new Date(latestSession.startedAt).toLocaleString()}</div>
+                  <div>{formatDuration(latestSession.durationSeconds)}</div>
+                  <div>{latestSession.note || 'No note saved.'}</div>
+                </div>
               </div>
-            </div>
-          ) : (
+            ) : null;
+          })() || (
             <div className="rounded-2xl border border-dashed border-zinc-200 dark:border-zinc-800/80 p-8 text-center bg-zinc-50/50 dark:bg-zinc-900/20">
               <div className="w-12 h-12 mx-auto rounded-xl bg-white dark:bg-[#1c1c24] border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
                 <Clock className="w-5 h-5" />

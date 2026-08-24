@@ -308,6 +308,14 @@ export const Subjects: React.FC = () => {
   const loading = summaryQuery.isLoading;
   const error = summaryQuery.error;
 
+  const renderValue = (val: string | number) => {
+    return loading ? (
+      <span className="inline-block h-5 w-16 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse mt-1" />
+    ) : (
+      String(val)
+    );
+  };
+
   return (
     <div className="space-y-6 animate-fade-in-up font-sans text-left">
       <nav
@@ -371,25 +379,25 @@ export const Subjects: React.FC = () => {
       <section aria-label="Study overview statistics" className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
         <StatsCard
           title="Subjects"
-          value={loading ? '...' : String(summary?.subjectCount || 0)}
+          value={renderValue(summary?.subjectCount || 0)}
           description="Managed in your workspace"
           icon={<BookOpen className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />}
         />
         <StatsCard
           title="Syllabus Progress"
-          value={loading ? '...' : `${syllabusProgress}%`}
+          value={renderValue(`${syllabusProgress}%`)}
           description="Completed chapters across subjects"
           icon={<GraduationCap className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />}
         />
         <StatsCard
           title="Topics Completed"
-          value={loading ? '...' : `${completedTopics}/${totalTopics}`}
+          value={renderValue(`${completedTopics}/${totalTopics}`)}
           description="Syllabus topics checked off"
           icon={<Sparkles className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />}
         />
         <StatsCard
           title="Today's Tasks"
-          value={loading ? '...' : String(summary?.todayTaskCount || 0)}
+          value={renderValue(summary?.todayTaskCount || 0)}
           description="Planner tasks due today"
           icon={<Palette className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />}
         />
@@ -572,9 +580,17 @@ export const Subjects: React.FC = () => {
                       onClick={() => setSelectedSubjectId(subject.id)}
                       className={`text-left rounded-2xl border p-4 transition-all ${
                         isSelected
-                          ? 'border-indigo-500/50 bg-indigo-50/40 dark:bg-indigo-950/10'
-                          : 'border-zinc-200 dark:border-zinc-800 hover:border-indigo-500/30 hover:bg-zinc-50/60 dark:hover:bg-zinc-800/30'
+                          ? 'shadow-sm'
+                          : 'border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50/60 dark:hover:bg-zinc-800/30'
                       }`}
+                      style={
+                        isSelected
+                          ? {
+                              borderColor: subject.color || '#6366f1',
+                              backgroundColor: `${subject.color || '#6366f1'}0f`,
+                            }
+                          : undefined
+                      }
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex items-start gap-3 min-w-0">

@@ -3,7 +3,7 @@ import React from 'react';
 
 interface StatsCardProps {
   title: string;
-  value: string;
+  value: React.ReactNode;
   description: string;
   icon: React.ReactNode;
   ariaLabel?: string;
