@@ -130,7 +130,7 @@ router.get(
           <div class="card">
             <h1>⚠️ Google Sign-In Not Configured</h1>
             <p>Google OAuth credentials are missing or set to dummy values in the backend environment configuration. Please set <strong>GOOGLE_CLIENT_ID</strong> and <strong>GOOGLE_CLIENT_SECRET</strong> in your environment variables to enable this feature.</p>
-            <a href="http://localhost:3000/login" class="btn">Back to Login</a>
+            <a href="${process.env.CORS_ORIGIN || 'http://localhost:3000'}/login" class="btn">Back to Login</a>
           </div>
         </body>
         </html>
@@ -147,10 +147,13 @@ router.get(
 
 router.get(
   '/google/callback',
-  passport.authenticate('google', {
-    failureRedirect: 'http://localhost:3000/login?error=GoogleOAuthFailed',
-    session: false,
-  }),
+  (req, res, next) => {
+    const clientUrl = process.env.CORS_ORIGIN || 'http://localhost:3000';
+    passport.authenticate('google', {
+      failureRedirect: `${clientUrl}/login?error=GoogleOAuthFailed`,
+      session: false,
+    })(req, res, next);
+  },
   googleCallbackSuccess,
 );
 
