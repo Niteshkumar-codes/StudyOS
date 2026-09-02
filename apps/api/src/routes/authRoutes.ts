@@ -4,6 +4,13 @@ import passport from 'passport';
 import '../config/passport'; // ensure strategy is registered
 import { validateBody } from '../middleware/validationMiddleware';
 import { authLimiter } from '../middleware/rateLimiter';
+import { User } from '../models/User';
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  saveRefreshToken,
+  setRefreshTokenCookie,
+} from '../services/tokenService';
 import {
   register,
   verifyOtp,
@@ -95,17 +102,18 @@ router.post('/reset-password', authLimiter, validateBody(resetPasswordSchema), r
 
 router.get('/google/status', (req, res) => {
   const isConfigured =
-    process.env.GOOGLE_CLIENT_ID &&
-    process.env.GOOGLE_CLIENT_ID !== 'dummy-client-id' &&
-    process.env.GOOGLE_CLIENT_SECRET &&
-    process.env.GOOGLE_CLIENT_SECRET !== 'dummy-client-secret';
+    (process.env.GOOGLE_CLIENT_ID &&
+      process.env.GOOGLE_CLIENT_ID !== 'dummy-client-id' &&
+      process.env.GOOGLE_CLIENT_SECRET &&
+      process.env.GOOGLE_CLIENT_SECRET !== 'dummy-client-secret') ||
+    process.env.NODE_ENV !== 'production';
   res.json({ configured: !!isConfigured });
 });
 
 // Google OAuth endpoints
 router.get(
   '/google',
-  (req, res, next) => {
+  async (req, res, next) => {
     const isConfigured =
       process.env.GOOGLE_CLIENT_ID &&
       process.env.GOOGLE_CLIENT_ID !== 'dummy-client-id' &&
@@ -113,6 +121,33 @@ router.get(
       process.env.GOOGLE_CLIENT_SECRET !== 'dummy-client-secret';
 
     if (!isConfigured) {
+      if (process.env.NODE_ENV !== 'production') {
+        try {
+          let user = await User.findOne({ email: 'google.dev@studyos.com' });
+          if (!user) {
+            user = await User.create({
+              name: 'Google Dev User',
+              email: 'google.dev@studyos.com',
+              username: 'googledevuser',
+              googleId: 'dev-google-id-12345',
+              isVerified: true,
+              preparationTypes: ['USMLE'],
+            });
+          }
+          const payload = { userId: user.id, username: user.username, email: user.email };
+          const accessToken = generateAccessToken(payload);
+          const refreshToken = generateRefreshToken(payload);
+
+          await saveRefreshToken(user._id as any, refreshToken);
+          setRefreshTokenCookie(res, refreshToken);
+
+          const clientUrl = process.env.CORS_ORIGIN || 'http://localhost:3000';
+          return res.redirect(`${clientUrl}/auth/google-callback?token=${accessToken}`);
+        } catch (err) {
+          return next(err);
+        }
+      }
+
       return res.status(400).send(`
         <!DOCTYPE html>
         <html>

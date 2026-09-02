@@ -1,403 +1,280 @@
-# StudyOS 📚
+# StudyOS
 
-> A modern, unified web workspace built for students and competitive exam aspirants to organize subjects, track syllabus progress, plan daily tasks, time study sessions, analyze productivity, and manage study notes.
+StudyOS is a monorepo study workspace for planning exams, organizing subjects and syllabus topics, logging study sessions, tracking notes, and reviewing study analytics. The supported authentication flow is Google-only sign-in and sign-up.
 
----
+## Overview
 
-## 📋 Table of Contents
+The application is split into a React/Vite frontend and an Express/MongoDB backend. Most study data is stored in MongoDB through the API. The exam management module is client-side and persists to browser localStorage.
 
-1. [StudyOS Overview](#1-studyos-overview)
-2. [Problem It Solves](#2-problem-it-solves)
-3. [Main Features](#3-main-features)
-4. [Tech Stack](#4-tech-stack)
-5. [Architecture Overview](#5-architecture-overview)
-6. [Project Structure](#6-project-structure)
-7. [Authentication Flow](#7-authentication-flow)
-8. [Exam Management](#8-exam-management)
-9. [Subjects & Syllabus](#9-subjects--syllabus)
-10. [Daily Planner](#10-daily-planner)
-11. [Study Timer](#11-study-timer)
-12. [Study Session History](#12-study-session-history)
-13. [Progress Analytics](#13-progress-analytics)
-14. [Notes Workspace](#14-notes-workspace)
-15. [MongoDB Setup](#15-mongodb-setup)
-16. [Environment Variables](#16-environment-variables)
-17. [Local Development Setup](#17-local-development-setup)
-18. [Backend and Frontend Commands](#18-backend-and-frontend-commands)
-19. [Production Build Commands](#19-production-build-commands)
-20. [API Overview](#20-api-overview)
-21. [Security Considerations](#21-security-considerations)
-22. [Future Improvements](#22-future-improvements)
-23. [Screenshots](#23-screenshots)
-24. [License](#24-license)
+## Features
 
----
+- Google-only authentication with refresh-token session handling.
+- Dashboard with summary cards for subjects, tasks, notes, study time, sessions, and syllabus progress.
+- Exam management with create, edit, delete, and detail views.
+- Subjects with embedded syllabus topics and completion tracking.
+- Planner with dated tasks, status changes, and subject linking.
+- Study timer with session save and session history.
+- Analytics for daily activity, study totals, subject distribution, and syllabus progress.
+- Notes workspace with create, edit, delete, search, and subject filtering.
+- Responsive desktop and mobile layouts.
 
-## 1. StudyOS Overview
+## Tech Stack
 
-**StudyOS** is a specialized, open-source productivity dashboard built specifically for students preparing for competitive and academic examinations (e.g., GATE, JEE, UPSC, University finals). It consolidates fragmented tools—like task lists, stopwatch timers, syllabus checklists, exam countdowns, and notes apps—into a single workspace with continuous progress feedback, streak counters, and gamified XP metrics.
+### Frontend
 
----
+- React 19
+- TypeScript
+- Vite 5
+- Tailwind CSS
+- TanStack React Query
+- React Router DOM 7
+- Axios
+- Lucide React
+- React Hot Toast
 
-## 2. Problem It Solves
+### Backend
 
-Competitive exam preparation requires long-term consistency, multi-subject tracking, and daily discipline. Existing tools suffer from several flaws:
-- **Fragmented Workflows:** Students juggle separate apps for task management, timers, notes, and syllabus tracking.
-- **Lack of Syllabus Visibility:** Generic task managers do not model hierarchical syllabus topics (`NOT_STARTED` ➔ `IN_PROGRESS` ➔ `COMPLETED`) or calculate granular progress metrics per subject.
-- **Distracting Analytics:** Generic productivity apps lack study-specific analytics such as subject time distribution, daily activity trends, and target exam countdowns.
-- **Inconsistent Session Tracking:** Manual logs are tedious, whereas automated timers connected directly to subject statistics eliminate friction.
+- Node.js
+- Express 4
+- TypeScript
+- MongoDB
+- Mongoose 9
+- Passport Google OAuth
+- JWT auth
+- Helmet, CORS, cookie-parser, express-rate-limit, Zod
 
-StudyOS solves these problems by uniting syllabus completion tracking, focused study timers, exam countdowns, daily planning, and revision notes inside one secure, full-stack application.
+### Monorepo Tooling
 
----
+- pnpm workspaces
+- Turborepo
+- ESLint
+- Prettier
 
-## 3. Main Features
+## Project Structure
 
-- 🔐 **Dual Authentication & Security:** Standard register/login with hashed passwords (`bcryptjs`) alongside single-click Google OAuth 2.0. Session control via short-lived JWT Access Tokens and HTTP-only Refresh Cookies.
-- 📊 **Centralized Executive Dashboard:** At-a-glance metrics covering total study hours, active streak days, user level & XP, upcoming exam countdowns, today's top tasks, and active subject progress.
-- 🎯 **Exam Management:** Target exam tracker displaying countdown days, target scores, target ranks, and exam dates.
-- 📚 **Subjects & Syllabus Tracker:** Hierarchical subject organization with color codes, topic breakdown, topic status toggling, and automated percentage completion calculations.
-- 📅 **Daily Task Planner:** Flexible task scheduling with date filters, status tracking, and today's priority view.
-- ⏱️ **Integrated Study Timer:** Dual-mode timer (stopwatch & countdown) with subject/topic tagging, session persistence, automatic XP gains, and streak updates.
-- 📜 **Study Session History:** Comprehensive history log showing duration, subject tags, timestamps, and session notes with deletion support.
-- 📈 **Productivity Analytics:** Visual graphs breakdown for daily activity, weekly trends, total study hours, subject time allocation, and syllabus progress.
-- 📝 **Notes Workspace:** Full-featured note-taking environment supporting Markdown/plain text, tags, subject filtering, quick search, and updated timestamps.
-- 📱 **Responsive UI Design:** Optimized layout for desktop monitors, tablets, and mobile browsers.
-
----
-
-## 4. Tech Stack
-
-### Frontend (`apps/web`)
-- **Core Library:** React 19, TypeScript
-- **Build Tool:** Vite 5
-- **Styling:** Tailwind CSS, PostCSS, Autoprefixer
-- **UI Components & Icons:** Lucide React icons
-- **State & Data Fetching:** TanStack React Query v5, Axios
-- **Form Handling & Validation:** React Hook Form, Zod, @hookform/resolvers
-- **Notifications:** React Hot Toast
-- **Routing:** React Router DOM v7
-
-### Backend (`apps/api`)
-- **Runtime Environment:** Node.js (v20+)
-- **Framework:** Express v4, TypeScript
-- **Database & ODM:** MongoDB, Mongoose v9
-- **Authentication:** Passport.js (`passport-google-oauth20`), `jsonwebtoken`, `bcryptjs`
-- **Security & Utilities:** Helmet, CORS, Cookie-parser, Express Rate Limit, Zod validation
-
-### Monorepo & Tooling
-- **Package Manager:** pnpm (v9) with pnpm workspaces
-- **Orchestration:** Turborepo
-- **Code Quality:** ESLint, Prettier, Husky, lint-staged
-
----
-
-## 5. Architecture Overview
-
-StudyOS follows a clean monorepo architecture separating client applications, server APIs, and shared configuration/type packages:
-
-```
-                      ┌──────────────────────────┐
-                      │   React 19 Frontend      │
-                      │       (@studyos/web)      │
-                      └─────────────┬────────────┘
-                                    │ HTTP / REST API (Axios + Credentials)
-                                    │ JWT Bearer Token / HTTP-only Refresh Cookie
-                                    ▼
-                      ┌──────────────────────────┐
-                      │   Express REST API       │
-                      │       (@studyos/api)      │
-                      └─────────────┬────────────┘
-                                    │ Mongoose ODM
-                                    ▼
-                      ┌──────────────────────────┐
-                      │    MongoDB Database      │
-                      └──────────────────────────┘
-```
-
----
-
-## 6. Project Structure
-
-```
+```text
 StudyOS/
 ├── apps/
-│   ├── api/                  # Express REST API application
+│   ├── api/
 │   │   ├── src/
-│   │   │   ├── config/       # Database & Passport OAuth configurations
-│   │   │   ├── controllers/  # Auth, Notes, Profile, and Study controllers
-│   │   │   ├── middleware/   # Auth check, rate limiting, validation
-│   │   │   ├── models/       # Mongoose Schemas (User, Subject, Exam, Task, Note, Session)
-│   │   │   ├── routes/       # Express API routes
-│   │   │   ├── services/     # Mail and Token management services
-│   │   │   └── app.ts        # Express app initialization
-│   │   ├── .env.example      # Backend environment template
-│   │   └── tsconfig.json
-│   │
-│   └── web/                  # Vite + React 19 Frontend application
+│   │   │   ├── config/
+│   │   │   ├── controllers/
+│   │   │   ├── middleware/
+│   │   │   ├── models/
+│   │   │   ├── routes/
+│   │   │   └── services/
+│   │   ├── .env.example
+│   │   └── package.json
+│   └── web/
 │       ├── src/
-│       │   ├── components/   # Reusable UI components & layouts
-│       │   ├── contexts/     # Auth Context Provider
-│       │   ├── lib/          # Axios client instance
-│       │   ├── pages/        # Dashboard, Exams, Planner, Timer, Notes, Analytics
-│       │   └── App.tsx       # React router & providers
-│       ├── .env              # Frontend environment variables
-│       └── vite.config.ts
-│
+│       │   ├── components/
+│       │   ├── contexts/
+│       │   ├── layouts/
+│       │   ├── lib/
+│       │   └── pages/
+│       ├── .env.example
+│       └── package.json
 ├── packages/
-│   ├── config/               # Shared TypeScript & ESLint configurations
-│   ├── types/                # Shared TypeScript domain interfaces
-│   ├── ui/                   # Shared UI primitives
-│   └── utils/                # Shared utility helpers
-│
-├── pnpm-workspace.yaml       # Monorepo workspace definition
-├── turbo.json                # Turborepo task pipeline configuration
-├── package.json              # Root dependencies & scripts
-└── README.md                 # Project documentation
+│   ├── config/
+│   ├── types/
+│   ├── ui/
+│   └── utils/
+├── package.json
+├── pnpm-workspace.yaml
+├── turbo.json
+└── README.md
 ```
 
----
+## Authentication
 
-## 7. Authentication Flow
+StudyOS uses Google OAuth for account access. The frontend sends users to the backend Google auth endpoint, the backend creates or links a verified user, and the frontend stores the short-lived access token in memory while relying on an HTTP-only refresh cookie for session renewal.
 
-```
-   [User] ──(Register/Login)──► [POST /api/auth/register | /login] ──► Validate Credentials
-                                                                                │
-                                 ┌──────────────────────────────────────────────┘
-                                 ▼
-                   Generate JWT Access Token (15m)
-                   Set HTTP-Only Refresh Cookie (7d)
-                                 │
-                                 ▼
-                     Returned User Payload & Access Token
-```
+Email OTP registration is not part of the supported flow.
 
-- **Standard Auth:** User registers with name, username, email, password, and preparation goals. Passwords are salt-hashed via `bcryptjs`.
-- **Google OAuth 2.0:** Single click authentication redirects through Google Consent screen. User profile data creates or links to an existing verified StudyOS account.
-- **Session Persistence:** Access token stored in React memory (`AuthContext`); refresh token saved securely in HTTP-only `sameSite` cookie. Token rotation occurs automatically on 401 response via Axios interceptors.
+## Feature Notes
 
-> **Note on Setup:** Google OAuth requires configuring valid client ID and client secret credentials in environment variables (`GOOGLE_CLIENT_ID` & `GOOGLE_CLIENT_SECRET`).
+### Exam Management
 
----
+The exam module runs in the browser and uses localStorage. It supports create, edit, delete, and detail views, but it does not sync exam records to MongoDB.
 
-## 8. Exam Management
+### Subjects and Syllabus
 
-Track upcoming target exams with precision:
-- Create target exams with title, date, target score, target rank, and preparation type.
-- Automatic live calculations of days remaining (`Countdown`).
-- Quick edit and deletion controls.
-- Visual status cards integrated directly into the central dashboard.
+Subjects are stored in MongoDB and include embedded syllabus topics with progress percentages derived from completed topics.
 
----
+### Planner
 
-## 9. Subjects & Syllabus
+Planner tasks are stored in MongoDB and can be filtered by date or status.
 
-Detailed hierarchical syllabus management:
-- Create subjects with custom title, code, description, and accent color.
-- Add topics to subjects, assign target hours, and set topic status:
-  - `NOT_STARTED`
-  - `IN_PROGRESS`
-  - `COMPLETED`
-- Automated real-time subject progress calculations:
-  $$\text{Progress \%} = \left( \frac{\text{Completed Topics}}{\text{Total Topics}} \right) \times 100$$
-- Total completed topic counts update dashboard metrics dynamically.
+### Study Timer and History
 
----
+Saved study sessions go to MongoDB and feed dashboard, history, and analytics views.
 
-## 10. Daily Planner
+### Notes
 
-Streamlined daily task planning:
-- Create tasks linked to subjects or general study goals.
-- Fields include title, date, priority (`LOW`, `MEDIUM`, `HIGH`), and status (`PENDING`, `COMPLETED`).
-- Filter view by Today's tasks, upcoming dates, or completed tasks.
-- One-click task completion toggles.
+Notes are persisted in MongoDB and support search, subject filtering, editing, and deletion.
 
----
+## Environment Variables
 
-## 11. Study Timer
+### API: `apps/api/.env`
 
-Focus-enhancing study timer engine:
-- **Modes:** Stopwatch (count-up) and Countdown Timer modes.
-- **Subject Association:** Select target subject and topic before starting.
-- **Control Actions:** Start, Pause, Resume, Stop, and Discard.
-- **Session Saver:** Saves session duration, subject ID, topic ID, and optional reflection notes.
-- **Gamification Mechanics:** Saving a session awards XP points to the user profile and maintains/increments daily active study streak count.
+Copy from `apps/api/.env.example`.
 
----
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `PORT` | No | API port, defaults to `5000` |
+| `NODE_ENV` | No | Development or production mode |
+| `CORS_ORIGIN` | Yes | Frontend origin used by CORS and OAuth redirects |
+| `MONGODB_URI` | Yes | MongoDB connection string |
+| `JWT_ACCESS_SECRET` | Yes | Access-token signing secret |
+| `JWT_REFRESH_SECRET` | Yes | Refresh-token signing secret |
+| `JWT_ACCESS_EXPIRY` | No | Access-token lifetime, defaults to `15m` |
+| `JWT_REFRESH_EXPIRY` | No | Refresh-token lifetime, defaults to `7d` |
+| `GOOGLE_CLIENT_ID` | Yes | Google OAuth client ID |
+| `GOOGLE_CLIENT_SECRET` | Yes | Google OAuth client secret |
+| `GOOGLE_CALLBACK_URL` | Yes | Google OAuth callback URL |
+| `SMTP_HOST` | Optional | SMTP server for password reset emails |
+| `SMTP_PORT` | Optional | SMTP port |
+| `SMTP_USER` | Optional | SMTP username |
+| `SMTP_PASS` | Optional | SMTP password or app password |
+| `SMTP_FROM` | Optional | From address for mail delivery |
 
-## 12. Study Session History
+### Web: `apps/web/.env`
 
-Complete record of completed study effort:
-- Chronological list of logged study sessions.
-- Displays subject tag, duration (minutes/hours), date timestamp, and reflection notes.
-- Deletion support to remove accidental logs.
+Copy from `apps/web/.env.example`.
 
----
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `VITE_API_URL` | Yes | Base API URL used by the frontend |
 
-## 13. Progress Analytics
-
-Data-driven productivity insights:
-- **Total Study Hours:** Total accumulative study duration.
-- **Time Window Filters:** Today, Weekly, and Monthly aggregations.
-- **Subject Distribution:** Percentage breakdown of study time per subject.
-- **Daily Activity Graph:** Visual bar representations of daily study duration over time.
-- **Syllabus Progress Summary:** Comparative progress bars across all enrolled subjects.
-
----
-
-## 14. Notes Workspace
-
-Centralized study notes editor:
-- Create, view, edit, and delete study notes.
-- Attach subject tags and custom topic tags.
-- Full-text search across titles and content.
-- Filter notes by subject or tag.
-- Displays last updated timestamps.
-
----
-
-## 15. MongoDB Setup
-
-StudyOS uses MongoDB for document storage via Mongoose.
-
-### Local MongoDB Setup
-Ensure MongoDB is running locally at `mongodb://127.0.0.1:27017/studyos`.
-
-### MongoDB Atlas Setup (Production)
-1. Create a MongoDB Atlas cluster.
-2. Obtain your connection string.
-3. Set the `MONGODB_URI` environment variable in your production deployment.
-
----
-
-## 16. Environment Variables
-
-### Backend Environment Variables (`apps/api/.env`)
-
-| Variable | Description | Default / Example |
-| :--- | :--- | :--- |
-| `PORT` | API server port | `5000` |
-| `NODE_ENV` | Environment mode (`development` / `production`) | `development` |
-| `CORS_ORIGIN` | Allowed client URL for CORS & OAuth redirects | `http://localhost:3000` |
-| `MONGODB_URI` | MongoDB connection URI | `mongodb://127.0.0.1:27017/studyos` |
-| `JWT_ACCESS_SECRET` | Secret key for signing Access Tokens | `your_access_secret_key` |
-| `JWT_REFRESH_SECRET` | Secret key for signing Refresh Tokens | `your_refresh_secret_key` |
-| `JWT_ACCESS_EXPIRY` | Access Token expiration duration | `15m` |
-| `JWT_REFRESH_EXPIRY` | Refresh Token expiration duration | `7d` |
-| `GOOGLE_CLIENT_ID` | Google OAuth Client ID | `your_google_client_id.apps.googleusercontent.com` |
-| `GOOGLE_CLIENT_SECRET` | Google OAuth Client Secret | `your_google_client_secret` |
-| `GOOGLE_CALLBACK_URL` | OAuth redirect URI callback | `http://localhost:5000/api/auth/google/callback` |
-| `SMTP_HOST` | *(Optional)* SMTP host for password resets | `smtp.gmail.com` |
-| `SMTP_PORT` | *(Optional)* SMTP port | `587` |
-| `SMTP_USER` | *(Optional)* SMTP username | `your_email@gmail.com` |
-| `SMTP_PASS` | *(Optional)* SMTP app password | `your_app_password` |
-| `SMTP_FROM` | *(Optional)* Sender email header | `StudyOS <no-reply@studyos.com>` |
-
-### Frontend Environment Variables (`apps/web/.env`)
-
-| Variable | Description | Default / Example |
-| :--- | :--- | :--- |
-| `VITE_API_URL` | Base endpoint URL for REST API | `http://localhost:5000/api` |
-| `VITE_APP_NAME` | Display name of the web application | `StudyOS` |
-
----
-
-## 17. Local Development Setup
+## Local Setup
 
 ### Prerequisites
-- Node.js (v20.x or higher)
-- pnpm (`npm install -g pnpm`)
-- MongoDB (running locally or MongoDB Atlas URI)
 
-### Installation Steps
+- Node.js 20 or newer
+- pnpm 9 or newer
+- MongoDB running locally or a MongoDB Atlas URI
+- Google OAuth credentials for the backend
 
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/your-username/studyos.git
-   cd studyos
-   ```
+### Steps
 
-2. **Install Dependencies:**
+1. Install dependencies.
+
    ```bash
    pnpm install
    ```
 
-3. **Configure Environment Files:**
-   Create `.env` inside `apps/api/` based on `apps/api/.env.example`:
-   ```bash
-   cp apps/api/.env.example apps/api/.env
-   ```
-   Ensure `apps/web/.env` contains valid Vite configuration.
+2. Create the API environment file.
 
-4. **Start Development Servers:**
+   ```bash
+   copy apps\api\.env.example apps\api\.env
+   ```
+
+3. Create the web environment file.
+
+   ```bash
+   copy apps\web\.env.example apps\web\.env
+   ```
+
+4. Set valid Google OAuth and MongoDB values in `apps/api/.env`.
+
+5. Start the development servers.
+
    ```bash
    pnpm dev
    ```
-   Or run specific applications:
-   ```bash
-   # Start API server only (port 5000)
-   pnpm --filter @studyos/api dev
 
-   # Start Web client only (port 3000)
-   pnpm --filter @studyos/web dev
-   ```
+6. Open the web app at `http://localhost:3000`.
 
-5. **Access Application:**
-   Open browser at `http://localhost:3000`.
+## Running Frontend and Backend
 
----
-
-## 18. Backend and Frontend Commands
-
-| Task | Command |
-| :--- | :--- |
-| **Run Monorepo (Dev)** | `pnpm dev` |
-| **Run Backend API (Dev)** | `pnpm --filter @studyos/api dev` |
-| **Run Frontend Web (Dev)** | `pnpm --filter @studyos/web dev` |
-| **Build All** | `pnpm build` |
-| **Build Backend API** | `pnpm --filter @studyos/api build` |
-| **Build Frontend Web** | `pnpm --filter @studyos/web build` |
-| **Lint All** | `pnpm lint` |
-| **Lint Frontend Web** | `pnpm --filter @studyos/web lint` |
-| **Format Code** | `pnpm format` |
-
----
-
-## 19. Production Build Commands
+### Backend only
 
 ```bash
-# Build TypeScript backend and Vite frontend bundle
-pnpm build
-
-# Start production API server
-pnpm --filter @studyos/api start
+pnpm --filter @studyos/api dev
 ```
 
----
+### Frontend only
 
-## 20. API Overview
+```bash
+pnpm --filter @studyos/web dev
+```
 
-### Auth Endpoints (`/api/auth`)
-- `POST /api/auth/register` — Register a new account
-- `POST /api/auth/login` — Login with username/email & password
-- `POST /api/auth/logout` — Revoke refresh session and clear cookie
-- `POST /api/auth/refresh` — Refresh access token using cookie
-- `GET  /api/auth/google` — Trigger Google OAuth 2.0 flow
-- `GET  /api/auth/google/callback` — Google OAuth callback handler
-- `GET  /api/auth/google/status` — Check Google OAuth configuration status
-- `POST /api/auth/forgot-password` — Request password reset email
-- `POST /api/auth/reset-password` — Complete password reset with token
+## Build Commands
 
-### Profile & Stats (`/api/profile`)
-- `GET  /api/profile` — Fetch current user profile details
-- `PUT  /api/profile` — Update user profile details
+```bash
+pnpm --filter @studyos/api build
+pnpm --filter @studyos/web build
+pnpm --filter @studyos/web lint
+pnpm build
+pnpm lint
+```
 
-### Study & Planner (`/api/study`)
-- `GET / POST / PUT / DELETE /api/study/exams` — Manage target exams
-- `GET / POST / PUT / DELETE /api/study/subjects` — Manage subjects & syllabus topics
-- `GET / POST / PUT / DELETE /api/study/tasks` — Manage planner tasks
-- `GET / POST / DELETE /api/study/sessions` — Manage study sessions & duration logs
-- `GET /api/study/analytics` — Get aggregated study metrics & progress reports
+## Authentication and Google OAuth Setup
+
+1. Create a Google OAuth client in Google Cloud Console.
+2. Add the backend callback URL, for example `http://localhost:5000/api/auth/google/callback`.
+3. Set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in `apps/api/.env`.
+4. Set `CORS_ORIGIN` to the frontend origin.
+5. For production, update the callback URL and frontend origin to your deployed domains.
+
+## MongoDB Setup
+
+### Local
+
+- Run MongoDB locally and set `MONGODB_URI=mongodb://127.0.0.1:27017/studyos`.
+
+### Atlas or managed MongoDB
+
+- Create a database cluster.
+- Copy the connection string into `MONGODB_URI`.
+- Ensure the deployment network allows the app to connect.
+
+## Deployment Notes
+
+- Build the API and web apps before deployment.
+- Set `NODE_ENV=production` in production environments.
+- Set the production frontend URL in `CORS_ORIGIN`.
+- Set `VITE_API_URL` in the frontend to the deployed API base URL.
+- Ensure Google OAuth redirect URLs match the deployed API callback.
+- Ensure MongoDB credentials are available in the deployed environment.
+- If password reset email is enabled, configure the SMTP variables.
+- The Vite build reports a chunk-size warning, but the build succeeds.
+
+## API Summary
+
+### Auth
+
+- `GET /api/auth/google`
+- `GET /api/auth/google/callback`
+- `GET /api/auth/google/status`
+- `POST /api/auth/logout`
+- `POST /api/auth/refresh`
+
+### Profile
+
+- `GET /api/profile`
+- `PUT /api/profile`
+
+### Study
+
+- `GET /api/study/summary`
+- `GET|POST|PUT|DELETE /api/study/subjects`
+- `GET|POST|PUT|DELETE /api/study/subjects/:subjectId/topics`
+- `GET|POST|PUT|DELETE /api/study/tasks`
+- `GET|POST|PUT|DELETE /api/study/sessions`
+- `GET /api/study/analytics`
+
+### Notes
+
+- `GET|POST|PUT|DELETE /api/notes`
+
+## Verification
+
+Validated locally with:
+
+- `pnpm --filter @studyos/api build`
+- `pnpm --filter @studyos/web build`
+- `pnpm --filter @studyos/web lint`
 
 ### Notes Workspace (`/api/notes`)
 - `GET / POST / PUT / DELETE /api/notes` — Manage study notes

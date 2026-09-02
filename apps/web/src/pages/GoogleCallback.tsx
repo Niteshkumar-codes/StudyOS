@@ -30,7 +30,7 @@ export const GoogleCallback: React.FC = () => {
         // Set login details in context
         login(token, response.data.user);
         toast.success('Successfully authenticated with Google!');
-        navigate('/profile');
+        navigate('/dashboard');
       } catch (error) {
         toast.error('Failed to retrieve user profile after Google login.');
         navigate('/login');
